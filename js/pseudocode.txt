@@ -1,0 +1,42 @@
+player init
+    pSpace
+    pHand
+dealer init
+    dSpace
+    dHand
+        dHand[0] is not visible until end of the round
+wincondition: pScore is closer to 21 than dealerscore at endround, or dealer bust
+losecondition: dScore is closer to 21 than playerscore at endround, or bust
+class Deck
+    constructor
+        this.deck = [];
+        this.suit;
+        this.number;
+        for each suit loop through number and push the value to the deck
+    shuffle()
+        const deck = this.deck 
+        somehow randomize the deck
+game rules
+    scoreCounter [{A:11, 1}, {2:2}, {3:3}, {4:4}, {5:5}, {6:6}, {7:7}, {8:8}, {9:9}, {10:10}, {J: 10}, {Q:10}, {K:10}]
+game init
+    let playingDeck = new deck
+    playingDeck.shuffle()
+    playingdeck.pop to pHand
+    playingdeck.pop to dHand
+    playingdeck.pop to pHand
+    playingdeck.pop to dHand
+scorecounter
+    playerscore = playerhand.reduce((acc, card)=>{
+        if pHand.some()
+        return acc + respective scorecounter value
+    } 0);
+pTurn // players turn
+    stay to end turn
+    hit to playingdeck.pop to pHand
+        if pScore > 21
+            BUST pLose
+dTurn // dealers turn
+    if dScore < 17 
+        playingDeck.pop to dHand
+    if dScore > 21
+        BUST! pWin
