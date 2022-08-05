@@ -1,5 +1,5 @@
 player init
-    pSpace
+    pSpace (dom or jquery element linked to HTML)
     pHand
 dealer init
     dSpace
@@ -38,5 +38,7 @@ pTurn // players turn
 dTurn // dealers turn
     if dScore < 17 
         playingDeck.pop to dHand
+    if dScore < 17 && > 21
+        calculate wincondition
     if dScore > 21
         BUST! pWin
