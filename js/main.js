@@ -9,7 +9,6 @@ class Deck{
                 this.deck.push(card);
             });
         });
-        
         };
     shuffle(){ //TIL about the fisher-yates algorithm
         for(let i = this.deck.length - 1; i > 0; i--){
@@ -17,16 +16,14 @@ class Deck{
             const temp = this.deck[i];
             this.deck[i] = this.deck[j];
             this.deck[j] = temp;
-        }
-}
+        }}
 };
 let cards = new Deck;
-let pHand = []
-let dHand = []
 let pScore = 0;
 let dScore = 0;
-const scoreCounter = {
-    'ace': [11], 
+let pHand = []
+let dHand = []
+const scoreCounter = {'ace': [11], 
     '2': [2],
     '3': [3],
     '4': [4],
@@ -41,8 +38,14 @@ const scoreCounter = {
     'king' :[10]}
 
 function init(){
+    pScore = 0;
+    dScore = 0;
+    pHand = []
+    dHand = []
+    cards = new Deck;
     cards.shuffle();
     console.log('Game Initialized...');
+    console.log('deck count:', cards.deck);
     pHand.push(cards.deck.pop());
     dHand.push(cards.deck.pop());
     pHand.push(cards.deck.pop());
@@ -52,11 +55,10 @@ function init(){
     console.log('pHand is', pHand);
     console.log('dealer\'s hand is', dHand);
     pCount();
-    dCount();
+    dHiddenCount();
 }
 
 init();
-
 
 // jQuery below
 $('#reset-game').click(init);
@@ -64,8 +66,9 @@ $('#hit').click(() => {
     pHand.push(cards.deck.pop());
     console.log('pHand is', pHand);
     pCount();
-    
 });
+$('#stay').click(dCount)
+
 
 // functions below
 function pCount() {
@@ -87,25 +90,36 @@ function pCount() {
         console.log('BUST');
     }
     $('#player-hand-count').html(pScore);
+    console.log('you drew '+ pHand[pHand.length-1].cardNum[0]);
+}
+
+function dHiddenCount() {
+    dScore = 0;
+    for(let i = 1; i < dHand.length; i++){
+        dScore = dScore + scoreCounter[dHand[i].cardNum][0];
+    };
+    $('#dealer-hand-count').html(dScore);
 }
 
 function dCount() {
     let dAcesUsed = 0;
+    dScore = 0;
     let aceCheck = dHand.some((ace) => {
         return ace.cardNum === 'ace';
     });
-    dScore = 0;
-    for(let i = 0; i < dHand.length; i++){
-        dScore = dScore + scoreCounter[dHand[i].cardNum][0];
-    };
-    if(dScore > 21 && aceCheck === true){
-        dAcesUsed++
-        dScore = dScore - (10 * dAcesUsed);
-    };
-    if(dScore === 21){
-        console.log('dealer WIN')
-    }  else if (pScore > 21){
-        console.log('BUST');
+    while(dScore < 17){
+        for(let i = 0; i < dHand.length; i++){
+            dScore = dScore + scoreCounter[dHand[i].cardNum][0];
+        };
+        if(dScore > 21 && aceCheck === true){
+            dAcesUsed++
+            dScore = dScore - (10 * dAcesUsed);
+        };
+        if(dScore === 21){
+            console.log('dealer WIN')
+        }  else if (dScore > 21){
+            console.log('dealer BUST');
+        }
+    $('#dealer-hand-count').html(dScore);
     }
-    $('#dealer-hand-count').html(pScore);
 }

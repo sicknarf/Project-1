@@ -58,12 +58,12 @@ button {
     height: 220px;;
 }
 #dealer-hand {
-    background-color: rgba(0,0,0,.3);
+    background-color: rgba(0,0,0,.4);
     padding: 5px;
     color: pink;
 }
 #player-hand {
-    background-color: rgba(0,0,0,.3);
+    background-color: rgba(0,0,0,.4);
     padding: 5px;   
     color: lightblue;
 }
