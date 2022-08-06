@@ -1,0 +1,56 @@
+nav {
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 20px;
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 50px;
+    background-color: rgb(0,128,0);
+}
+nav div {
+    line-height: 3rem;
+    padding: 0 1rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    background-color: green;
+  }
+  nav > div:last-child {
+    margin-left: auto;
+  }
+.menuItems:hover {
+    background-color: rgb(40,150,40);
+}
+#dealer-icon {
+    height:100px
+}
+#card-icon {
+    height: 200px;
+}
+img {
+    padding: 5px;
+}
+header {
+    padding-bottom: 20px;
+}
+#deck {
+    height: 200px;
+    position:relative;
+    top:-10px
+}
+#announcements-box {
+    height: 70px;
+    background-color: gray;
+    color:white
+}
+tr {
+    line-height: 70px;
+}
+button {
+    margin: 10px;
+    border: 2px solid black;
+}
+#pSpace {
+    height: 220px;;
+}
