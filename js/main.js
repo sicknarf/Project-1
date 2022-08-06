@@ -3,8 +3,8 @@ let dHand = []
 class Deck{
     constructor(){
         this.deck = [];
-        const suits = ['s', 'c', 'h', 'd'];
-        const values = ['a', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'j', 'q', 'k'];
+        const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
+        const values = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             values.forEach((value)=>{
                 let card = {suit: suit, value: value};
@@ -23,6 +23,16 @@ class Deck{
 }
 };
 
-let cards = new Deck
-cards.shuffle();
-console.log(cards.deck);
+function init(){
+    let cards = new Deck;
+    cards.shuffle();
+    console.log('Game Initialized...');
+    pHand.push(cards.deck.pop());
+    dHand.push(cards.deck.pop());
+    pHand.push(cards.deck.pop());
+    dHand.push(cards.deck.pop());
+    console.log(`You got [${pHand[0].value} of ${pHand[0].suit}] and [${pHand[1].value} of ${pHand[1].suit}]`);
+    console.log(`Dealer's visible card is [${dHand[1].value} of ${dHand[1].suit}]`);
+}
+
+init();
