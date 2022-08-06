@@ -5,11 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Poker With Francis</title>
-    <script defer src="js/main.js"></script>
     <script defer
-src="https://code.jquery.com/jquery-3.3.1.min.js"
-integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-crossorigin="anonymous"></script>
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+    <script defer src="js/main.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" href="assets/favicon.png">
@@ -18,13 +19,14 @@ crossorigin="anonymous"></script>
 <body>
     <header>
         <nav id="top-menu">
-            <div class="menuItems">Reset Game</div>
+            <div class="menuItems" id="reset-game">Reset Game</div>
         </nav>
     </header>
     <div class="container">
         <div class="row">
-          <div class="col text-right col-3">
-            <img src="https://cdn-icons-png.flaticon.com/512/105/105753.png" id="dealer-icon">
+          <div class="col col-3 text-right">
+            <div><img src="https://cdn-icons-png.flaticon.com/512/105/105753.png" id="dealer-icon"></div>
+            <div><br><br><span id="dealer-hand">dealer's hand:&nbsp;<span id="dealer-hand-count">0</span></span></div>
           </div>
           <div class="col text-center col-6" id="dealer-space"> 
             <div>
@@ -39,12 +41,18 @@ crossorigin="anonymous"></script>
             <table><tr><td class="align-middle"><h4>announcements go here</h4></td></tr></table>
         </div>
         <div class="row">
-            <div class="col col-12 text-center">
+            <div class="col col-3 text-right">
+                <br><span id="player-hand">your hand:&nbsp;<span id="player-hand-count">0</span></span>
+            </div>
+            <div class="col col-6 text-center">
                 <img src="https://blog.betvictor.com/campaigns/the-art-of-playing-cards/assets/img/og_card_4@2x.png" id="pSpace">
+            </div>
+            <div class="col col-3">
+
             </div>
         </div>
         <div class="row justify-content-center">
-            <button type="button" class="btn btn-success col-1">hit</button><button type="button" class="btn btn-danger col-1">stay</button>
+            <button type="button" class="btn btn-success col-1" id="hit">hit</button><button type="button" class="btn btn-danger col-1" hit="'">stay</button>
         </div>
       </div>
 </body>

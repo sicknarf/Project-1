@@ -1,3 +1,9 @@
+header {
+    padding-bottom: 20px;
+}
+body {
+    color:black
+}
 nav {
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 20px;
@@ -31,9 +37,6 @@ nav div {
 img {
     padding: 5px;
 }
-header {
-    padding-bottom: 20px;
-}
 #deck {
     height: 200px;
     position:relative;
@@ -53,4 +56,14 @@ button {
 }
 #pSpace {
     height: 220px;;
+}
+#dealer-hand {
+    background-color: rgba(0,0,0,.3);
+    padding: 5px;
+    color: pink;
+}
+#player-hand {
+    background-color: rgba(0,0,0,.3);
+    padding: 5px;   
+    color: lightblue;
 }
