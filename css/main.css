@@ -45,7 +45,8 @@ img {
 #announcements-box {
     height: 70px;
     background-color: gray;
-    color:white
+    color:white;
+    margin-bottom: 10px;
 }
 tr {
     line-height: 70px;
@@ -54,12 +55,13 @@ button {
     margin: 10px;
     border: 2px solid black;
 }
-#pSpace {
-    height: 220px;;
+#player-space {
+    height: 250px;;
 }
 #dealer-hand {
     background-color: rgba(0,0,0,.4);
     padding: 5px;
+    margin-top:20px;
     color: pink;
 }
 #player-hand {
@@ -69,4 +71,15 @@ button {
 }
 #reset-game:hover {
     cursor: pointer;
+}
+#dealer-space {
+    height:250px;
+}
+#dealer-space img {
+    width:130px;
+    margin-bottom: 20px;
+}
+#player-space img {
+    width:130px;
+    margin-top: 20px;
 }

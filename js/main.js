@@ -73,16 +73,16 @@ function init(){
     cards = new Deck;
     cards.shuffle();
     console.log('Game Initialized...');
-    // console.log('deck count:', cards.deck);
     deal();
-    // console.log(`You got [${pHand[0].cardNum} of ${pHand[0].suit}] and [${pHand[1].cardNum} of ${pHand[1].suit}]`);
-    // console.log(`Dealer's cards are [${dHand[0].cardNum} of ${dHand[0].suit}] and [${dHand[1].cardNum} of ${dHand[1].suit}]`);
-    // console.log(`Dealer's visible card is [${dHand[1].cardNum} of ${dHand[1].suit}]`);
-    // console.log('pHand is', pHand);
-    // console.log('dealer\'s hand is', dHand);
     pCount();
     dHiddenCount();
+    $('#d-one').html(`<img src="assets/cardback.jpeg">`);
+    $('#d-two').html(`<img src="assets/playable-cards/${dHand[1].cardNum}_of_${dHand[1].suit}.png">`);
+    $('#p-one').html(`<img src="assets/playable-cards/${pHand[0].cardNum}_of_${pHand[0].suit}.png">`);
+    $('#p-two').html(`<img src="assets/playable-cards/${pHand[1].cardNum}_of_${pHand[1].suit}.png">`);
 }
+
+
 
 function pCount() {
     let aceCheck = pHand.some((ace) => {
