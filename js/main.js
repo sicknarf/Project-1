@@ -2,7 +2,6 @@ class Deck{
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
-        // const cardNums = ['ace', 'ace', '2', '2', '4', '8', 'king'];
         const cardNums = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             cardNums.forEach((cardNum)=>{
@@ -19,7 +18,7 @@ class Deck{
             this.deck[j] = temp;
         }}
 };
-const scoreCounter = {'ace': 11, 
+const scoreCounter = {'aceOne': 1, 
     '2': 2,
     '3': 3,
     '4': 4,
@@ -31,7 +30,8 @@ const scoreCounter = {'ace': 11,
     '10': 10,
     'jack': 10,
     'queen': 10,
-    'king' :10}
+    'king': 10,
+    'ace': 11}
 let cards = new Deck;
 let pScore = 0;
 let dScore = 0;
@@ -54,8 +54,6 @@ $(function(){
         pCount();
     });
     $('#stay').click(dealerAI);
-    $('#test').click(clearHands);
-    $('#testtwo').click(deal);
     $('#deal').click(()=> { 
         clearHands();
         deal();
@@ -130,7 +128,6 @@ function dCountLastCard(){
 }
 
 function dealerAI() {
-    // console.log('dealerAI start')
     dScore = 0;
     dCount();
     $('#hit').prop('disabled', true);
@@ -138,7 +135,11 @@ function dealerAI() {
     let aceCheck = dHand.some((ace) => {
         return ace.cardNum === 'ace';
     });
-
+    if (dScore > 21 && aceCheck === true){
+        let aceCard = dHand.find(hand => hand.cardNum === 'ace');
+        aceCard.cardNum = 'aceOne';
+        dealerAI();
+    }
     if (dScore >= 17){
         if(dScore === 21 && dHand.length === 2 && pScore === 21 && pHand.length === 2){
             $('h4').html('both blackjacks. PUSH.');
@@ -177,7 +178,6 @@ function dealerAI() {
         dealerAI();
         }
     };
-
 
 function clearHands() {
     let pHandLength = pHand.length
