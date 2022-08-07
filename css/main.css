@@ -67,3 +67,6 @@ button {
     padding: 5px;   
     color: lightblue;
 }
+#reset-game:hover {
+    cursor: pointer;
+}
