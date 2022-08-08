@@ -60,7 +60,8 @@ init();
 
 // jQuery
 $(function(){ 
-    $('#deal').prop('disabled', true);
+    $('#deal').hide();
+    // $('#deal').prop('disabled', true);
     $('#reset-game').click(init);
     $('#hit').click(() => { 
         cardPop(p);
@@ -68,7 +69,7 @@ $(function(){
         pCount();
     });
     $('#stay').click(()=>{
-        $('#dealer-space').html(`<span id="d-0"><img src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span>`);
+        $('#dealer-space').html(`<span id="dealer-0"><img src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
         dealerAI();
     });
     $('#deal').click(()=> { 
@@ -76,6 +77,7 @@ $(function(){
         deal();
         $('h4').html('');
         pCount();
+        $('#deal').hide();
         // console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
         // console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
     });
@@ -94,7 +96,6 @@ function init(){
     deal();
     dHiddenCount();
     pCount();
-    // $('#d-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
     console.log(d, 'is dealer')
 }
 
@@ -126,7 +127,7 @@ function pCount() {
         $('#hit').prop('disabled', true);
         $('#stay').prop('disabled', true);
         $('h4').html('BUST');
-        $('#deal').prop('disabled', false);
+        $('#deal').show();
     }
     $('#player-hand-count').html(p.score);
 }
@@ -168,41 +169,40 @@ function dealerAI() {
         dealerAI();
     }
     if (d.score >= 17){
-        $(`#${d.name}-space`).append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
+        $('#dealer-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`)
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('h4').html('both blackjacks. PUSH.');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if(d.score === 21 && d.hand.length === 2){
             $('h4').html('the dealer got blackjack');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
             $('h4').html('you got blackjack, dealer did not. You win!');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if(d.score === 21 && p.score === 21) {
             $('h4').html('PUSH');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if (d.score > 21){
             $('h4').html('dealer BUST');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if (21-d.score === 21-p.score){
             $('h4').html('PUSH');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if(21-d.score < 21-p.score){
             $('h4').html('the dealer has won.');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else if(21-d.score > 21-p.score){
             $('h4').html('you have won.');
-            $('#deal').prop('disabled', false);
+            $('#deal').show();
         } else {console.log('error. find out what happened.')}
         $('#dealer-hand-count').html(d.score);
         console.log('d.hand is', d.hand);
         console.log('d.score is', d.score)
     }
     if (d.score < 17) {
+        d.cardCounter++;
         cardPop(d);
-        console.log('d.score before addition', d.score)
         dCountLastCard();
-        console.log('d.score after addition', d.score)
         dealerAI();
         }
     };
@@ -234,9 +234,12 @@ function deal () {
     d.cardCounter = 0;
     $('#player-space').html('');
     cardPop(p);
+    p.cardCounter++;
     d.hand.push(cards.deck.pop());
     cardPop(p);
+    p.cardCounter++;
     cardPop(d);
+    d.cardCounter++;
     console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
     console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
     console.log(p.hand, 'is p.hand');
@@ -245,7 +248,7 @@ function deal () {
     dHiddenCount();
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
-    $('#dealer-space').html('<span id="d-0"><img src="assets/cardback.jpeg"></span>');
+    $('#dealer-space').html('<span id="dealer-0"><img src="assets/cardback.jpeg"></span><span id="dealer-1"></span>');
     $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
 };
 
@@ -253,5 +256,4 @@ function cardPop(player) {
     player.hand.push(cards.deck.pop());
     $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
     $(`#${player.name}-${player.cardCounter}`).html(`<img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
-    player.cardCounter++;
 }
