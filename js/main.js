@@ -202,7 +202,7 @@ function dealerAI() {
     if (d.score < 17) {
         d.cardCounter++;
         cardPop(d);
-        dCountLastCard();
+        dCount();
         dealerAI();
         }
     };
