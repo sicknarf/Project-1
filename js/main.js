@@ -257,4 +257,4 @@ function cardPop(player) {
     $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
     $(`#${player.name}-${player.cardCounter}`).html(`<img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
 }
-// test
+// test :)
