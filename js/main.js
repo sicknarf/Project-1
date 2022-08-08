@@ -41,6 +41,7 @@ let dHand = []
 let discardPile = []
 let pAcesUsed = 0;
 let dAcesUsed = 0;
+let aceCheck = false;
 
 init();
 
@@ -70,6 +71,7 @@ function init(){
     dScore = 0;
     pHand = []
     dHand = []
+    $('h4').html('');
     cards = new Deck;
     cards.shuffle();
     console.log('Game Initialized...');
@@ -80,22 +82,30 @@ function init(){
     $('#d-two').html(`<img src="assets/playable-cards/${dHand[1].cardNum}_of_${dHand[1].suit}.png">`);
     $('#p-one').html(`<img src="assets/playable-cards/${pHand[0].cardNum}_of_${pHand[0].suit}.png">`);
     $('#p-two').html(`<img src="assets/playable-cards/${pHand[1].cardNum}_of_${pHand[1].suit}.png">`);
+    
 }
 
-
+function scoreCount(hand, score){ // needs work
+    score = 0
+    for(let i = 0; i < hand.length; i++){
+        score = score + parseInt(scoreCounter[hand[i].cardNum]);
+    }
+}
 
 function pCount() {
-    let aceCheck = pHand.some((ace) => {
-        return ace.cardNum === 'ace';
-    });
+    aceChecker(pHand);
     pScore = 0;
     for(let i = 0; i < pHand.length; i++){
         pScore = pScore + parseInt(scoreCounter[pHand[i].cardNum]);
     };
     if(pScore > 21 && aceCheck === true){
-        pAcesUsed++
-        pScore = pScore - (10 * pAcesUsed);
-    };
+        let aceCard = pHand.find(hand => hand.cardNum === 'ace');
+        aceCard.cardNum = 'aceOne';
+            pScore = 0;
+            for(let i = 0; i < pHand.length; i++){
+                pScore = pScore + parseInt(scoreCounter[pHand[i].cardNum]);
+            };
+        };
     if(pScore === 21){
         $('h4').html('You got 21!');
         $('#hit').prop('disabled', true);
@@ -127,14 +137,18 @@ function dCountLastCard(){
     dScore = dScore + parseInt(scoreCounter[dHand[dHand.length-1].cardNum]);    
 }
 
+function aceChecker(hand){
+    aceCheck = hand.some((ace) => {
+        return ace.cardNum === 'ace';
+    })
+};
+
 function dealerAI() {
     dScore = 0;
     dCount();
     $('#hit').prop('disabled', true);
     $('#stay').prop('disabled', true);
-    let aceCheck = dHand.some((ace) => {
-        return ace.cardNum === 'ace';
-    });
+    aceChecker(dHand);
     if (dScore > 21 && aceCheck === true){
         let aceCard = dHand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
