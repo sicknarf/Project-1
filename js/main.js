@@ -39,9 +39,8 @@ let dHiddenScore = 0;
 let pHand = []
 let dHand = []
 let discardPile = []
-let pAcesUsed = 0;
-let dAcesUsed = 0;
 let aceCheck = false;
+let cardCounter = 0;
 
 init();
 
@@ -50,7 +49,7 @@ $(function(){
     $('#deal').prop('disabled', true);
     $('#reset-game').click(init);
     $('#hit').click(() => { 
-        pHand.push(cards.deck.pop());
+        pCardPop();
         console.log('pHand is', pHand);
         pCount();
     });
@@ -76,13 +75,12 @@ function init(){
     cards.shuffle();
     console.log('Game Initialized...');
     deal();
-    pCount();
     dHiddenCount();
-    $('#d-one').html(`<img src="assets/cardback.jpeg">`);
-    $('#d-two').html(`<img src="assets/playable-cards/${dHand[1].cardNum}_of_${dHand[1].suit}.png">`);
-    $('#p-one').html(`<img src="assets/playable-cards/${pHand[0].cardNum}_of_${pHand[0].suit}.png">`);
-    $('#p-two').html(`<img src="assets/playable-cards/${pHand[1].cardNum}_of_${pHand[1].suit}.png">`);
-    
+    $('#d-0').html(`<img src="assets/cardback.jpeg">`);
+    $('#d-1').html(`<img src="assets/playable-cards/${dHand[1].cardNum}_of_${dHand[1].suit}.png">`);
+    // $('#p-0').html(`<img src="assets/playable-cards/${pHand[0].cardNum}_of_${pHand[0].suit}.png">`);
+    // $('#p-1').html(`<img src="assets/playable-cards/${pHand[1].cardNum}_of_${pHand[1].suit}.png">`);
+    // $('#p-three').html(`<img src="assets/playable-cards/${pHand[2].cardNum}_of_${pHand[2].suit}.png">`);
 }
 
 function scoreCount(hand, score){ // needs work
@@ -211,13 +209,16 @@ function clearHands() {
         discardPile = []
     }
     console.log('clearHands end. pHand is', pHand, 'dHand is', dHand);
-    // console.log('discard pile is', discardPile);
+    console.log('discard pile is', discardPile);
+    console.log('deck is', cards.deck)
 };
 
 function deal () {
-    pHand.push(cards.deck.pop());
+    cardCounter = 0
+    $('#player-space').html('');
+    pCardPop();
     dHand.push(cards.deck.pop());
-    pHand.push(cards.deck.pop());
+    pCardPop();
     dHand.push(cards.deck.pop());
     console.log(`You got [${pHand[0].cardNum} of ${pHand[0].suit}] and [${pHand[1].cardNum} of ${pHand[1].suit}]`);
     console.log(`Dealer's cards are [${dHand[0].cardNum} of ${dHand[0].suit}] and [${dHand[1].cardNum} of ${dHand[1].suit}]`);
@@ -227,7 +228,12 @@ function deal () {
     dHiddenCount();
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
-    pAcesUsed = 0;
-    dAcesUsed = 0;
+    
 };
 
+function pCardPop() {
+    pHand.push(cards.deck.pop());
+    $('#player-space').append(`<span id="p-${cardCounter}"><img src="assets/playable-cards/${pHand[cardCounter].cardNum}_of_${pHand[cardCounter].suit}.png"></span>`);
+    $(`#p-${cardCounter}`).html(`<img src="assets/playable-cards/${pHand[cardCounter].cardNum}_of_${pHand[cardCounter].suit}.png">`);
+    cardCounter++;
+}
