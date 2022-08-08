@@ -83,3 +83,8 @@ button {
     width:130px;
     margin-top: 20px;
 }
+.preload-elements img {
+    height:50px;
+    position: absolute;
+    top: -100px;
+}
