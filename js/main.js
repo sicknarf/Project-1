@@ -37,6 +37,7 @@ const p = {
     name:'player',
     score:0,
     hand:[],
+    cardCounter:0,
 }
 
 const d = {
@@ -44,6 +45,7 @@ const d = {
     score:0,
     hiddenScore:0,
     hand:[],
+    cardCounter:0,
 }
 
 let cards = new Deck;
@@ -65,7 +67,10 @@ $(function(){
         console.log('p.hand is', p.hand);
         pCount();
     });
-    $('#stay').click(dealerAI);
+    $('#stay').click(()=>{
+        $('#dealer-space').html(`<span id="d-0"><img src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span>`);
+        dealerAI();
+    });
     $('#deal').click(()=> { 
         clearHands();
         deal();
@@ -89,8 +94,8 @@ function init(){
     deal();
     dHiddenCount();
     pCount();
-    $('#d-0').html(`<img src="assets/cardback.jpeg">`);
-    $('#d-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
+    // $('#d-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
+    console.log(d, 'is dealer')
 }
 
 function scoreCount(hand, score){ // needs work
@@ -163,6 +168,7 @@ function dealerAI() {
         dealerAI();
     }
     if (d.score >= 17){
+        $(`#${d.name}-space`).append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('h4').html('both blackjacks. PUSH.');
             $('#deal').prop('disabled', false);
@@ -193,7 +199,7 @@ function dealerAI() {
         console.log('d.score is', d.score)
     }
     if (d.score < 17) {
-        d.hand.push(cards.deck.pop());
+        cardPop(d);
         console.log('d.score before addition', d.score)
         dCountLastCard();
         console.log('d.score after addition', d.score)
@@ -224,12 +230,13 @@ function clearHands() {
 };
 
 function deal () {
-    cardCounter = 0
-    $('#p-space').html('');
+    p.cardCounter = 0;
+    d.cardCounter = 0;
+    $('#player-space').html('');
     cardPop(p);
     d.hand.push(cards.deck.pop());
     cardPop(p);
-    d.hand.push(cards.deck.pop());
+    cardPop(d);
     console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
     console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
     console.log(p.hand, 'is p.hand');
@@ -238,12 +245,13 @@ function deal () {
     dHiddenCount();
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
-    
+    $('#dealer-space').html('<span id="d-0"><img src="assets/cardback.jpeg"></span>');
+    $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
 };
 
 function cardPop(player) {
     player.hand.push(cards.deck.pop());
-    $(`#${player.name}-space`).append(`<span id="p-${cardCounter}"><img src="assets/playable-cards/${p.hand[cardCounter].cardNum}_of_${p.hand[cardCounter].suit}.png"></span>`);
-    $(`#${player.name}-${cardCounter}`).html(`<img src="assets/playable-cards/${p.hand[cardCounter].cardNum}_of_${p.hand[cardCounter].suit}.png">`);
-    cardCounter++;
+    $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
+    $(`#${player.name}-${player.cardCounter}`).html(`<img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
+    player.cardCounter++;
 }
