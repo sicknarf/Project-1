@@ -38,6 +38,7 @@ const p = {
     score:0,
     hand:[],
     cardCounter:0,
+    cardDelay:1,
 }
 
 const d = {
@@ -46,6 +47,7 @@ const d = {
     hiddenScore:0,
     hand:[],
     cardCounter:0,
+    cardDelay:0,
 }
 
 let cards = new Deck;
@@ -65,7 +67,7 @@ $(function(){
         pCount();
     });
     $('#stay').click(()=>{
-        $('#dealer-space').html(`<span id="dealer-0"><img src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
+        $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
         $('#game-stats').html('');
         $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
         $('#announcements').html('');
@@ -108,7 +110,6 @@ function pCount() {
     aceChecker(p.hand);
     p.score = 0;
     scoreCount(p);
-
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
@@ -116,20 +117,23 @@ function pCount() {
         };
     if(p.score === 21 && p.hand.length === 2){
         $('#game-stats').html('you got Blackjack!');
+        $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s')
         $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
         $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/blackjack.png">');
         $('#hit').prop('disabled', true);
     } else if (p.score === 21) {
         $('#game-stats').html('you got 21!');
+        $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s')
         $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
         $('#hit').prop('disabled', true);
     } else if (p.score > 21){
         $('#hit').prop('disabled', true);
         $('#stay').prop('disabled', true);
         $('#game-stats').html('BUST');
+        $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s');
         $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-        $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+        $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
         $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
         $('#deal').show();
@@ -167,51 +171,55 @@ function dealerAI() {
         $('#dealer-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`)
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('#game-stats').html('both players got Blackjack!');
+            $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-3s');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
             $('#deal').show();
         } else if(d.score === 21 && d.hand.length === 2 && p.hand.length !== 2){
             $('#game-stats').html('the dealer got Blackjack, you did not');
+            $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-3s');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
             $('#game-stats').html('you got Blackjack, the dealer did not');
+            $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-3s');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
             $('#deal').show();
         } else if(d.score === 21 && p.score === 21) {
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
+            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
             $('#deal').show();
         } else if (d.score > 21){
             $('#game-stats').html('dealer bust!');
+            $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-3s');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
             $('#deal').show();
         } else if (21-d.score === 21-p.score){
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
             $('#deal').show();
         } else if(21-d.score < 21-p.score){
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if(21-d.score > 21-p.score){
-            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
             $('#deal').show();
         } else {
             console.log('error. find out what happened.')
@@ -223,15 +231,14 @@ function dealerAI() {
     }
     if (d.score < 17) {
         d.cardCounter++;
+        d.cardDelay++;
         cardPop(d);
         scoreCount(d);
         dealerAI();
         }
     };
     
-    setTimeout(() => {
- 
-      }, "1000")
+
 
 function clearHands() {
     let pHandLength = p.hand.length
@@ -258,10 +265,12 @@ function clearHands() {
 function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
+    d.cardDelay = 0;
     $('#player-space').html('');
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    $('#game-stats').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-3s animate__delay-2s');
     cardPop(p);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
@@ -269,6 +278,7 @@ function deal () {
     p.cardCounter++;
     cardPop(d);
     d.cardCounter++;
+    // $(selector).addClass(className);
     console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
     console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
     console.log(p.hand, 'is p.hand');
@@ -278,12 +288,15 @@ function deal () {
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0)')
-    $('#dealer-space').html('<span id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></span><span id="dealer-1"></span>');
+    $('#dealer-space').html('<span id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></span>');
     $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img class="animate__animated animate__fadeInDownBig"  src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
 };
 
 function cardPop(player) {
     player.hand.push(cards.deck.pop());
-    $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
-    $(`#${player.name}-${player.cardCounter}`).html(`<img class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
+    $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" id="cards-${player.name}-${player.cardCounter}" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
+    // $(`#${player.name}-${player.cardCounter}`).html(`<img class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
 }
+
+
+ 

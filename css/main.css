@@ -103,3 +103,15 @@ button {
 #announcements img {
     height: 75px;
 }
+player-0{
+    animation-duration: 0.5s; 
+}
+player-1{
+    animation-duration: 1s; 
+}
+dealer-0{
+    animation-duration: 1.5s; 
+}
+dealer-1{
+    animation-duration: 2s; 
+}
