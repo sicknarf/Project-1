@@ -90,6 +90,7 @@ button {
     height:50px;
     position: absolute;
     top: -500px;
+    overflow: hidden;
 }
 #dealer-spacer {
     margin-top: 150px;
