@@ -69,7 +69,6 @@ $(function(){
         p.chips = p.chips - currentBet;
         currentBet = currentBet * 2;
         hit();
-        $('#hit, #stay').prop('disabled', true);
         betDisplay();
     })
     $('#stay').click(dealerAI)
