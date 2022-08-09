@@ -96,26 +96,29 @@ function init(){
     console.log(d, 'is dealer')
 }
 
-function scoreCount(hand, score){ // needs work
-    score = 0
-    for(let i = 0; i < hand.length; i++){
-        score = score + parseInt(scoreCounter[hand[i].cardNum]);
+function scoreCount(player){ // needs work
+    player.score = 0
+    let handLength = player.hand.length
+    for(let i = 0; i < handLength; i++){
+        player.score = player.score + parseInt(scoreCounter[player.hand[i].cardNum]);
     }
 }
 
 function pCount() {
     aceChecker(p.hand);
     p.score = 0;
-    for(let i = 0; i < p.hand.length; i++){
-        p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
-    };
+    scoreCount(p);
+    // for(let i = 0; i < p.hand.length; i++){
+    //     p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
+    // };
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
-            p.score = 0;
-            for(let i = 0; i < p.hand.length; i++){
-                p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
-            };
+        scoreCount(p);
+            // p.score = 0;
+            // for(let i = 0; i < p.hand.length; i++){
+            //     p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
+            // };
         };
     if(p.score === 21 && p.hand.length === 2){
         $('#game-stats').html('you got Blackjack!');
