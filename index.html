@@ -69,7 +69,7 @@
                         <span id="player-hand">your hand:&nbsp;<span id="player-hand-count">0</span></span>
                     </div>
                     <div class="col text-left col-6">
-                        <span id="current-bet">$<span>999</span>&nbsp;is your current bet</span>
+                        <span id="current-bet">$<span id="bet-pool"></span>&nbsp;is your current bet</span>
                     </div>
                 </div>
                 <div id="player-space">
@@ -77,14 +77,24 @@
                 
             </div>
             <div class="col col-3" id="bets-space">
-                <div>
+                <div class="row">
                     <div class="btn-group" role="group" aria-label="Basic example" id="betting-buttons">
-                        <button type="button" class="btn btn-outline-light">&#60;</button>
-                        <button type="button" class="btn btn-success">Bet $<span id="bet-amount">100</span></button>
-                        <button type="button" class="btn btn-outline-light">&#62;</button>
+                        <button type="button" class="btn btn-outline-light col-3 text-right" id="bet-down">-</button>
+                        <button type="button" class="btn btn-success col-6 text-center">&nbsp;&nbsp;&nbsp;Bet&nbsp;&nbsp;&nbsp;<br>$<span id="bet-amount"></span></button>
+                        <button type="button" class="btn btn-outline-light col-3 text-left" id="bet-up">+</button>
                       </div>
                 </div>
-                <div id="chips-spacer"><span>You have:&nbsp;$<span id="chips-left">1000</span></span></div>
+                <div class="row justify-content-start">
+                    <div>
+                        <button type="button" class="btn btn-outline-warning col-12" id="clear-bet">clear bet</button>
+                    </div>
+                </div>
+                <div class="row" id="chips-left-line">
+                    <div class="text-left"><span id="chips-spacer">you have:&nbsp;$<span id="chips-left"></span></span></div>
+                </div>
+                <div class="row">
+                    <div class="text-left"><span id="bet-notifications"></span></div>
+                </div>
             </div>
         </div>
         <div class="row justify-content-center">

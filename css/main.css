@@ -125,3 +125,21 @@ button {
 #betting-buttons button {
     margin: 0;
 }
+#clear-bet {
+    margin: 10px 0 10px 0;
+}
+#bet-amount {
+    width: 200px
+}
+#bet-notifications {
+    color:red;
+    padding: 5px;
+}
+#chips-spacer {
+    padding: 5px;
+    color: white;
+    background-color: rgba(0,0,0,.4);
+}
+#chips-left-line {
+    margin-bottom: 10px;
+}

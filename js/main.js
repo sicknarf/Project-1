@@ -31,7 +31,8 @@ const scoreCounter = {'aceOne': 1,
     'jack': 10,
     'queen': 10,
     'king': 10,
-    'ace': 11}
+    'ace': 11
+};
 
 const p = {
     name:'player',
@@ -40,7 +41,7 @@ const p = {
     cardCounter:0,
     cardDelay:1,
     chips:1000,
-}
+};
 
 const d = {
     name:'dealer',
@@ -49,7 +50,10 @@ const d = {
     hand:[],
     cardCounter:0,
     cardDelay:0,
-}
+};
+
+const betAmounts = [1, 5, 25, 100, 250, 500, 1000]; // 0-6
+let betID = 3
 
 let cards = new Deck;
 let discardPile = []
@@ -76,6 +80,9 @@ $(function(){
         pCount();
         $('#deal').hide();
     });
+    $('#bet-down').click(()=>{modifyBet(-1)});
+    $('#bet-up').click(()=>{modifyBet(1)});
+    $('#bet-amount').click(updateBet);
 });
 
 init();
@@ -93,10 +100,12 @@ function init(){
     $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
-    // console.log('Game Initialized...');
+    $('#chips-left').html(p.chips);
+    $('#bet-pool').html(currentBet);
     deal();
     pCount();
     // console.log(d, 'is dealer')
+    $('#bet-amount').html(`${betAmounts[betID]}`);
 }
 
 function scoreCount(player){
@@ -292,7 +301,94 @@ function hit() {
 };
 
 function updateBet() {
-    //jquery to update current bet on HTML goes here
+    if(p.chips-betAmounts[betID] >= 0){
+        p.chips = p.chips - betAmounts[betID]; console.log('updateBet run line 304');
+        currentBet = currentBet + betAmounts[betID];console.log('updateBet run line 305');
+        $('#bet-notifications').html('');
+        $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+    } else if (p.chips-betAmounts[betID] < 0){
+        $('#bet-notifications').css('background-color','pink');
+        $('#bet-notifications').html('you can\'t bet that much!');
+    };
+    $('#chips-left').html(p.chips);console.log('updateBet run line 306');
+    $('#bet-pool').html(currentBet);console.log('updateBet run line 307');
+    $('#bet-amount').html(`${betAmounts[betID]}`);console.log('updateBet run line 308');
+    if (p.chips < 1000 && p.chips >= 500 && betID > 5){
+        betID = 5;console.log('updateBet run line 310');
+    } else if (p.chips < 500 && betID > 4){
+        betID = 4;console.log('updateBet run line 312');
+    } else if (p.chips < 250 && betID > 3){
+        betID = 3;console.log('updateBet run line 314');
+    } else if (p.chips < 100 && betID > 2){
+        betID = 2;console.log('updateBet run line 316');
+    } else if (p.chips < 25 && betID > 1){
+        betID = 1;console.log('updateBet run line 318');
+    } else if (p.chips < 5) {
+        betID = 0;console.log('updateBet run line 320');
+    };
+    $('#bet-amount').html(`${betAmounts[betID]}`);console.log('updateBet run line 322');
+    
+}
+
+function modifyBet(direction) {
+    if (p.chips >= 1000){
+        if(betID > 0 && betID < 6){
+            betID = betID + direction;
+        } else if (betID === 6 && direction === -1){
+            betID--
+        }
+    } else if (p.chips >= 500){
+        if(betID > 5){
+            betID = 5;
+        }
+        if(betID > 0 && betID < 5){
+            betID = betID + direction;
+        } else if (betID === 5 && direction === -1){
+            betID--
+        }
+    } else if (p.chips >= 250){
+        if(betID > 4){
+            betID = 4;
+        }
+        if(betID > 0 && betID < 4){
+            betID = betID + direction;
+        } else if (betID === 4 && direction === -1){
+            betID--
+        }
+    } else if (p.chips >= 100){
+        if(betID > 3){
+            betID = 3;
+        }
+        if(betID > 0 && betID < 3){
+            betID = betID + direction;
+        } else if (betID === 3 && direction === -1){
+            betID--
+        }
+    } else if (p.chips >= 25){
+        if(betID > 2){
+            betID = 2;
+        }
+        if(betID > 0 && betID < 2){
+            betID = betID + direction;
+        } else if (betID === 2 && direction === -1){
+            betID--
+        }
+    } else if (p.chips >= 5){
+        if(betID > 1){
+            betID = 1;
+        }
+        if(betID > 0 && betID < 1){
+            betID = betID + direction;
+        } else if (betID === 1 && direction === -1){
+            betID--
+        }
+    } else if (p.chips < 5) {
+        betID = 0
+    }
+    if(p.chips > 5 && betID === 0 && direction === 1){
+        betID++
+    }
+    $('#bet-amount').html(`${betAmounts[betID]}`)
 }
 
 function addBet() { 
