@@ -427,7 +427,7 @@ function push() {
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
     p.chips = p.chips + currentBet;
     currentBet = 0;
-    setTimeout((betDisplay), '800');
+    setTimeout((betDisplay), '1500');
     hidePlays();
 }
 
@@ -435,13 +435,13 @@ function lose() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
     currentBet = 0;
-    setTimeout((betDisplay), '800');
+    setTimeout((betDisplay), '1500');
     hidePlays()
     if (p.chips > 0){
         $('#deal-again').show();
         $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
     } else if (p.chips === 0){
-        setTimeout(()=>{$('#broke').show()}, '800');
+        setTimeout(()=>{$('#broke').show()}, '1200');
     }
 }
 
@@ -452,7 +452,7 @@ function win() {
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
     p.chips = p.chips + (currentBet*2);
     currentBet = 0;
-    setTimeout((betDisplay), '800');
+    setTimeout((betDisplay), '1500');
     hidePlays();
 }
 
