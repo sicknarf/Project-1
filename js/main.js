@@ -66,16 +66,17 @@ $(function(){
     });
     $('#stay').click(()=>{
         $('#dealer-space').html(`<span id="dealer-0"><img src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
+        $('#game-stats').html('');
+        $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
+        $('#announcements').html('');
         dealerAI();
     });
     $('#deal').click(()=> { 
         clearHands();
         deal();
-        $('h4').html('');
+        $('#announcements').html('');
         pCount();
         $('#deal').hide();
-        // console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
-        // console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
     });
 });
 
@@ -85,7 +86,7 @@ function init(){
     d.score = 0;
     p.hand = []
     d.hand = []
-    $('h4').html('');
+    $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
     console.log('Game Initialized...');
@@ -117,16 +118,22 @@ function pCount() {
             };
         };
     if(p.score === 21 && p.hand.length === 2){
-        $('#dealer-spacer').html('<span id="game-stats">you got Blackjack!</span>');
-        $('h4').html('display BLACKJACK');
+        $('#game-stats').html('you got Blackjack!');
+        $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+        $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+        $('#announcements').html('<img src="assets/blackjack.png">');
         $('#hit').prop('disabled', true);
     } else if (p.score === 21) {
-        $('#dealer-spacer').html('<span id="game-stats">you got 21!</span>');
+        $('#game-stats').html('you got 21!');
+        $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
         $('#hit').prop('disabled', true);
     } else if (p.score > 21){
         $('#hit').prop('disabled', true);
         $('#stay').prop('disabled', true);
-        $('h4').html('display BUST');
+        $('#game-stats').html('BUST');
+        $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+        $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+        $('#announcements').html('<img src="assets/you-lost.png">');
         $('#deal').show();
     }
     $('#player-hand-count').html(p.score);
@@ -171,36 +178,48 @@ function dealerAI() {
     if (d.score >= 17){
         $('#dealer-1').html(`<img src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`)
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
-            $('#dealer-spacer').html('<span id="game-stats">both players got Blackjack!</span>');
-            $('h4').html('display PUSH.');
+            $('#game-stats').html('both players got Blackjack!');
+            $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/push.png">');
             $('#deal').show();
         } else if(d.score === 21 && d.hand.length === 2 && p.hand.length !== 2){
-            $('#dealer-spacer').html('<span id="game-stats">the dealer got Blackjack, you did not</span>');
-            $('h4').html('display YOU LOSE');
+            $('#game-stats').html('the dealer got Blackjack, you did not');
+            $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/you-lost.png">');
             $('#deal').show();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
-            $('#dealer-spacer').html('<span id="game-stats">you got Blackjack, the dealer did not</span>');
-            $('h4').html('display YOU WIN');
+            $('#game-stats').html('you got Blackjack, the dealer did not');
+            $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/you-won.png">');
             $('#deal').show();
         } else if(d.score === 21 && p.score === 21) {
-            $('h4').html('display PUSH');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/push.png">');
             $('#deal').show();
         } else if (d.score > 21){
-            $('#dealer-spacer').html('dealer bust!');
-            $('h4').html('display YOU WIN');
+            $('#game-stats').html('dealer bust!');
+            $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/you-won.png">');
             $('#deal').show();
         } else if (21-d.score === 21-p.score){
-            $('h4').html('display PUSH');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/push.png">');
             $('#deal').show();
         } else if(21-d.score < 21-p.score){
-            $('h4').html('display YOU LOSE');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/you-lost.png">');
             $('#deal').show();
         } else if(21-d.score > 21-p.score){
-            $('h4').html('display YOU WIN');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+            $('#announcements').html('<img src="assets/you-won.png">');
             $('#deal').show();
         } else {
             console.log('error. find out what happened.')
-            $('#dealer-spacer').html('<span id="game-stats">an unexpected error has occurred</span>');
+            $('#game-stats').html('an unexpected error has occurred');
             }
         $('#dealer-hand-count').html(d.score);
         console.log('d.hand is', d.hand);
@@ -240,7 +259,8 @@ function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
     $('#player-space').html('');
-    $('#dealer-spacer').html('');
+    $('#game-stats').html('');
+    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     cardPop(p);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
@@ -256,6 +276,7 @@ function deal () {
     dHiddenCount();
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
+    $('#announcements-box').css('background-color', 'rgba(50,50,50,0)')
     $('#dealer-space').html('<span id="dealer-0"><img src="assets/cardback.jpeg"></span><span id="dealer-1"></span>');
     $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
 };
