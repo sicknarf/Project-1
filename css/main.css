@@ -34,7 +34,8 @@ nav div {
     background-color: rgb(40,150,40);
 }
 #dealer-icon {
-    height:100px
+    height:100px;
+    display: none;
 }
 #card-icon {
     height: 200px;
@@ -100,6 +101,12 @@ button {
     margin-bottom:20px;
     color: white;
 }
+#current-bet {
+    padding: 5px;
+    margin-bottom:20px;
+    color: white;
+    background-color: rgba(0,0,0,.4);
+}
 #announcements img {
     height: 75px;
 }
@@ -114,4 +121,7 @@ button {
     --animate-duration:.75s;
     padding: 20px 0 20px 0;
     overflow-x: hidden;
+}
+#betting-buttons button {
+    margin: 0;
 }

@@ -39,7 +39,7 @@ const p = {
     hand:[],
     cardCounter:0,
     cardDelay:1,
-    chips:1000
+    chips:1000,
 }
 
 const d = {
@@ -54,6 +54,7 @@ const d = {
 let cards = new Deck;
 let discardPile = []
 let aceCheck = false;
+let currentBet = 0;
 
 // jQuery
 $(function(){ 
@@ -290,3 +291,14 @@ function hit() {
     pCount();
 };
 
+function updateBet() {
+    //jquery to update current bet on HTML goes here
+}
+
+function addBet() { 
+    // adds current bet selection and subtracts from p.chips
+}
+
+function clearBet() {
+    // subtracts current bet selection and adds to p.chips
+}
