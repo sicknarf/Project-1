@@ -56,7 +56,7 @@ const betAmounts = [1, 5, 25, 100, 250, 500, 1000]; // 0-6
 let betID = 3
 
 let cards = new Deck;
-let discardPile = []
+let discardPile = [];
 let aceCheck = false;
 let currentBet = 0;
 
@@ -64,8 +64,7 @@ let currentBet = 0;
 $(function(){ 
     $('#initialize').click(init);
     $('#reset-game').click(init);
-    hidePlays();
-    $('#player-hand, #dealer-hand, #deal-again').hide();
+    $('#broke').click(init);
     $('#hit').click(hit);
     $('#stay').click(()=>{
         $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
@@ -76,14 +75,7 @@ $(function(){
     });
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
-            clearHands();
             deal();
-            $('#announcements').html('');
-            pCount();
-            $('#deal-again').hide();
-            showPlays()
-            $('#bet-notifications').html('');
-            $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
         } else if(currentBet <= 0){
             $('#bet-notifications').css('background-color','pink');
             $('#bet-notifications').html('you have to bet more than that');
@@ -93,19 +85,16 @@ $(function(){
     $('#bet-up').click(()=>{modifyBet(1)});
     $('#bet-amount').click(updateBet);
     $('#all-in').click(()=>{
-        currentBet = p.chips;
+        if(p.chips > 0){
+        currentBet = currentBet + p.chips;
         p.chips = 0;
         betDisplay();
+        }
     })
     $('#clear-bet').click(clearBet);
     $('#deal').click(()=>{
         if(currentBet > 0){
             deal();
-            $('#bet-notifications').html('');
-            $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
-            showPlays()
-            $('#player-hand, #dealer-hand').show();
-            $('#deal').hide();
         } else if(currentBet <= 0){
             $('#bet-notifications').css('background-color','pink');
             $('#bet-notifications').html('you have to bet more than that');
@@ -113,18 +102,30 @@ $(function(){
     })
 });
 
-init();
-
 
 // functions below
 function init(){
     $('#playing-space').show();
-    setTimeout(()=>{$('#splash').hide()}, '800')
-    $('#splash').addClass('animate__animated animated__slower animate__zoomOut')
+    $('#deal').prop('disabled', false);
+    setTimeout(()=>{$('#splash').hide()}, '800');
+    $('#player-hand, #dealer-hand, #deal-again, #broke').hide();
+    $('#splash').addClass('animate__animated animated__slower animate__zoomOut');
+    $('#dealer-space, #player-space').html('');
+    $('#game-stats').html('');
+    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
+    $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    $('#announcements-box').css('background-color', 'rgba(50,50,50,0)');
+    hidePlays();
     p.score = 0;
     d.score = 0;
-    p.hand = []
-    d.hand = []
+    p.hand = [];
+    d.hand = [];
+    p.chips = 1000;
+    p.cardCounter = 0;
+    d.cardCounter = 0;
+    d.cardDelay = 0;
+    betID = 3;
+    currentBet = 0
     $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
@@ -213,6 +214,7 @@ function dealerAI() {
         } else if(d.score === 21 && p.score === 21) {
             push()
             $('#deal-again').show();
+            $('#deal').prop('disabled', false);
         } else if (d.score > 21){
             animateGameStats();
             $('#game-stats').html('dealer bust!');
@@ -266,11 +268,20 @@ function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
     d.cardDelay = 0;
+    $('#player-hand, #dealer-hand').show();
+    $('#deal').prop('disabled', true);
+    $('#deal-again').hide();
     $('#player-space').html('');
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
     $('#game-stats').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-3s animate__delay-2s');
+    $('#bet-notifications').html('');
+    $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+    $('#announcements').html('');
+    $('#double').prop('disabled', false);
+    showPlays();
+    clearHands();
     cardPop(p);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
@@ -278,10 +289,6 @@ function deal () {
     p.cardCounter++;
     cardPop(d);
     d.cardCounter++;
-    // console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
-    // console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
-    // console.log(p.hand, 'is p.hand');
-    // console.log(d.hand, 'is d.hand');
     pCount();
     d.hiddenScore = 0;
     d.score = 0;
@@ -301,6 +308,7 @@ function cardPop(player) {
 };
 
 function hit() {
+    $('#double').prop('disabled', true);
     cardPop(p);
     // console.log('p.hand is', p.hand);
     p.cardCounter++;
@@ -410,6 +418,7 @@ function push() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
     $('#deal-again').show();
+    $('#deal').prop('disabled', false);
     p.chips = p.chips + currentBet;
     currentBet = 0;
     betDisplay();
@@ -419,16 +428,22 @@ function push() {
 function lose() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
-    $('#deal-again').show();
     currentBet = 0;
     $('#bet-pool').html(currentBet);
     hidePlays()
+    if (p.chips > 0){
+        $('#deal-again').show();
+        $('#deal').prop('disabled', false);
+    } else if (p.chips === 0){
+        setTimeout(()=>{$('#broke').show()}, '800');
+    }
 }
 
 function win() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
     $('#deal-again').show();
+    $('#deal').prop('disabled', false);
     p.chips = p.chips + (currentBet*2);
     currentBet = 0;
     betDisplay();
