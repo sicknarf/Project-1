@@ -96,7 +96,7 @@ function init(){
     console.log(d, 'is dealer')
 }
 
-function scoreCount(player){ // needs work
+function scoreCount(player){
     player.score = 0
     let handLength = player.hand.length
     for(let i = 0; i < handLength; i++){
@@ -108,23 +108,17 @@ function pCount() {
     aceChecker(p.hand);
     p.score = 0;
     scoreCount(p);
-    // for(let i = 0; i < p.hand.length; i++){
-    //     p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
-    // };
+
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
         scoreCount(p);
-            // p.score = 0;
-            // for(let i = 0; i < p.hand.length; i++){
-            //     p.score = p.score + parseInt(scoreCounter[p.hand[i].cardNum]);
-            // };
         };
     if(p.score === 21 && p.hand.length === 2){
         $('#game-stats').html('you got Blackjack!');
         $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
         $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-        $('#announcements').html('<img src="assets/blackjack.png">');
+        $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/blackjack.png">');
         $('#hit').prop('disabled', true);
     } else if (p.score === 21) {
         $('#game-stats').html('you got 21!');
@@ -135,8 +129,9 @@ function pCount() {
         $('#stay').prop('disabled', true);
         $('#game-stats').html('BUST');
         $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+        $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
         $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-        $('#announcements').html('<img src="assets/you-lost.png">');
+        $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
         $('#deal').show();
     }
     $('#player-hand-count').html(p.score);
@@ -151,16 +146,6 @@ function dHiddenCount() {
     $('#dealer-hand-count').html(d.hiddenScore);
 }
 
-function dCount(){
-    for(let i = 0; i < d.hand.length; i++){
-        d.score = d.score + parseInt(scoreCounter[d.hand[i].cardNum]);
-    }
-}
-
-function dCountLastCard(){
-    d.score = d.score + parseInt(scoreCounter[d.hand[d.hand.length-1].cardNum]);    
-}
-
 function aceChecker(hand){
     aceCheck = hand.some((ace) => {
         return ace.cardNum === 'ace';
@@ -169,7 +154,7 @@ function aceChecker(hand){
 
 function dealerAI() {
     d.score = 0;
-    dCount();
+    scoreCount(d);
     $('#hit').prop('disabled', true);
     $('#stay').prop('disabled', true);
     aceChecker(d.hand);
@@ -183,42 +168,50 @@ function dealerAI() {
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('#game-stats').html('both players got Blackjack!');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/push.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if(d.score === 21 && d.hand.length === 2 && p.hand.length !== 2){
             $('#game-stats').html('the dealer got Blackjack, you did not');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/you-lost.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
             $('#game-stats').html('you got Blackjack, the dealer did not');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
             $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else if(d.score === 21 && p.score === 21) {
-            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/push.png">');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if (d.score > 21){
             $('#game-stats').html('dealer bust!');
             $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
-            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/you-won.png">');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else if (21-d.score === 21-p.score){
-            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/push.png">');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if(21-d.score < 21-p.score){
-            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/you-lost.png">');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if(21-d.score > 21-p.score){
-            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
-            $('#announcements').html('<img src="assets/you-won.png">');
+            $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+            $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else {
             console.log('error. find out what happened.')
@@ -231,11 +224,15 @@ function dealerAI() {
     if (d.score < 17) {
         d.cardCounter++;
         cardPop(d);
-        dCount();
+        scoreCount(d);
         dealerAI();
         }
     };
     
+    setTimeout(() => {
+ 
+      }, "1000")
+
 function clearHands() {
     let pHandLength = p.hand.length
     let dHandLength = d.hand.length
@@ -264,6 +261,7 @@ function deal () {
     $('#player-space').html('');
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
+    $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
     cardPop(p);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
@@ -280,12 +278,12 @@ function deal () {
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0)')
-    $('#dealer-space').html('<span id="dealer-0"><img src="assets/cardback.jpeg"></span><span id="dealer-1"></span>');
-    $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
+    $('#dealer-space').html('<span id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></span><span id="dealer-1"></span>');
+    $('#dealer-space').append(`<span id="${d.name}-${d.cardCounter}"><img class="animate__animated animate__fadeInDownBig"  src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></span>`);
 };
 
 function cardPop(player) {
     player.hand.push(cards.deck.pop());
     $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
-    $(`#${player.name}-${player.cardCounter}`).html(`<img src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
+    $(`#${player.name}-${player.cardCounter}`).html(`<img class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">`);
 }

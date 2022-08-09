@@ -1,6 +1,9 @@
 header {
     padding-bottom: 20px;
 }
+:root {
+    --animate-duration: 200ms;
+}
 body {
     color:black;
     background:url("css-assets/blackjack-background.png");
