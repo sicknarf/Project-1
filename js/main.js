@@ -151,7 +151,7 @@ function animateGameStats() {
     $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
 }
 function animateAnnouncementsBox() {
-    $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
 }
 
@@ -172,41 +172,41 @@ function dealerAI() {
             $('#game-stats').html('both players got Blackjack!');
             animateGameStats();
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if(d.score === 21 && d.hand.length === 2 && p.hand.length !== 2){
             $('#game-stats').html('the dealer got Blackjack, you did not');
             animateGameStats();
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-lost.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
             $('#game-stats').html('you got Blackjack, the dealer did not');
             animateGameStats();
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else if(d.score === 21 && p.score === 21) {
             animateAnnouncementsBox();
-            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
+            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if (d.score > 21){
             $('#game-stats').html('dealer bust!');
             animateGameStats();
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else if (21-d.score === 21-p.score){
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/push.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
         } else if(21-d.score < 21-p.score){
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-lost.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
             $('#deal').show();
         } else if(21-d.score > 21-p.score){
             animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-2s" src="assets/you-won.png">');
+            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
             $('#deal').show();
         } else {
             console.log('error. find out what happened.');
