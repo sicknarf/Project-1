@@ -69,16 +69,10 @@ $(function(){
         p.chips = p.chips - currentBet;
         currentBet = currentBet * 2;
         hit();
-        $('#hit').prop('disabled', true);
+        $('#hit, #stay').prop('disabled', true);
         betDisplay();
     })
-    $('#stay').click(()=>{
-        $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
-        $('#game-stats').html('');
-        $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
-        $('#announcements').html('');
-        dealerAI();
-    });
+    $('#stay').click(dealerAI)
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
             deal();
@@ -195,6 +189,10 @@ function animateAnnouncementsBox() {
 function dealerAI() {
     d.score = 0;
     scoreCount(d);
+    $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
+    $('#game-stats').html('');
+    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
+    $('#announcements').html('');
     $('#hit').prop('disabled', true);
     $('#stay').prop('disabled', true);
     aceChecker(d.hand);
