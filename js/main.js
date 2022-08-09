@@ -68,6 +68,7 @@ $(function(){
     $('#double').click(()=>{
         p.chips = p.chips - currentBet;
         currentBet = currentBet * 2;
+        $('#hit').prop('disabled', true);
         hit();
         betDisplay();
     })
