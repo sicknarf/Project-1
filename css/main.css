@@ -99,7 +99,6 @@ button {
     padding: 5px;
     margin-bottom:20px;
     color: white;
-    font-size: 12px;
 }
 #announcements img {
     height: 75px;
@@ -114,4 +113,5 @@ button {
     display:none;
     --animate-duration:.75s;
     padding: 20px 0 20px 0;
+    overflow-x: hidden;
 }

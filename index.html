@@ -38,13 +38,18 @@
         <div class="row">
           <div class="col col-3 text-right">
             <div><img src="https://cdn-icons-png.flaticon.com/512/105/105753.png" id="dealer-icon"></div>
-            <div id="dealer-spacer"><span id="game-stats"></span></div>
+            <div id="dealer-spacer"></div>
           </div>
           <div class="col text-center col-6"> 
                 <div id="dealer-space">
                 </div>
-                <div>
-                    <span id="dealer-hand">dealer's hand:&nbsp;<span id="dealer-hand-count">0</span></span>
+                <div class="row">
+                    <div class="col text-right col-6">
+                        <span id="dealer-hand">dealer's hand:&nbsp;<span id="dealer-hand-count">0</span></span>
+                    </div>
+                    <div class="col text-left col-6">
+                        <span id="game-stats"></span>
+                    </div>
                 </div>
           </div>      
           <div class="col text-left col-3">
@@ -56,22 +61,31 @@
         </div>
         <div class="row">
             <div class="col col-3 text-right">
-                
+
             </div>
             <div class="col col-6 text-center" >
-                <div>
-                    <span id="player-hand">your hand:&nbsp;<span id="player-hand-count">0</span></span>
+                <div class="row">
+                    <div class="col text-right col-6">
+                        <span id="player-hand">your hand:&nbsp;<span id="player-hand-count">0</span></span>
+                    </div>
+                    <div class="col text-left col-6">
+                        <span id="current-bet">$<span>999</span>&nbsp;is your current bet</span>
+                    </div>
                 </div>
                 <div id="player-space">
                 </div>
                 
             </div>
-            <div class="col col-3">
-
+            <div class="col col-3" id="bets-space">
+                <div id="chips-spacer"><span>You have:&nbsp;$<span id="chips-left">1000</span></span></div>
+                <div></div>
             </div>
         </div>
         <div class="row justify-content-center">
             <button type="button" class="btn btn-success col-1" id="hit">hit</button><button type="button" class="btn btn-danger col-1" id="stay">stay</button>
+        </div>
+        <div class="row justify-content-center">
+            <button type="button" class="btn btn-warning col-2" id="double">double</button>
         </div>
         <div class="row justify-content-center">
             <button type="button" class="btn btn-light col-2 animate__animated animate__bounceIn animate__delay-2s" id="deal">deal again</button>

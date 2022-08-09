@@ -55,18 +55,12 @@ let cards = new Deck;
 let discardPile = []
 let aceCheck = false;
 
-
 // jQuery
 $(function(){ 
     $('#initialize').click(init);
-    $('#deal').hide();
     $('#reset-game').click(init);
-    $('#hit').click(() => { 
-        cardPop(p);
-        console.log('p.hand is', p.hand);
-        p.cardCounter++;
-        pCount();
-    });
+    $('#deal').hide();
+    $('#hit').click(hit);
     $('#stay').click(()=>{
         $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
         $('#game-stats').html('');
@@ -83,6 +77,9 @@ $(function(){
     });
 });
 
+init();
+
+
 // functions below
 function init(){
     $('#playing-space').show();
@@ -95,10 +92,10 @@ function init(){
     $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
-    console.log('Game Initialized...');
+    // console.log('Game Initialized...');
     deal();
     pCount();
-    console.log(d, 'is dealer')
+    // console.log(d, 'is dealer')
 }
 
 function scoreCount(player){
@@ -107,7 +104,7 @@ function scoreCount(player){
     for(let i = 0; i < handLength; i++){
         player.score = player.score + parseInt(scoreCounter[player.hand[i].cardNum]);
     }
-}
+};
 
 function pCount() {
     aceChecker(p.hand);
@@ -137,8 +134,8 @@ function pCount() {
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
         $('#deal').show();
     }
-    $('#player-hand-count').html(p.score);
-}
+    setTimeout(()=>{$('#player-hand-count').html(p.score)}, '400');
+};
 
 function aceChecker(hand){
     aceCheck = hand.some((ace) => {
@@ -150,6 +147,7 @@ function animateGameStats() {
     $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
 }
+
 function animateAnnouncementsBox() {
     $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
@@ -211,10 +209,10 @@ function dealerAI() {
         } else {
             console.log('error. find out what happened.');
             $('#game-stats').html('an unexpected error has occurred');
-            }
-        $('#dealer-hand-count').html(d.score);
-        console.log('d.hand is', d.hand);
-        console.log('d.score is', d.score)
+            };
+        setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '400');
+        // console.log('d.hand is', d.hand);
+        // console.log('d.score is', d.score)
     }
     if (d.score < 17) {
         d.cardCounter++;
@@ -223,7 +221,7 @@ function dealerAI() {
         scoreCount(d);
         dealerAI();
         }
-    };
+};
 
 function clearHands() {
     let pHandLength = p.hand.length
@@ -237,14 +235,14 @@ function clearHands() {
         discardPile.push(topDCard);
     }
     if (discardPile.length > cards.deck.length * .33){
-        console.log('discard pile got large. creating new deck and shuffling.')
+        // console.log('discard pile got large. creating new deck and shuffling.')
         cards = new Deck
         cards.shuffle();
         discardPile = []
     }
-    console.log('clearHands end. p.hand is', p.hand, 'd.hand is', d.hand);
-    console.log('discard pile is', discardPile);
-    console.log('deck is', cards.deck)
+    // console.log('clearHands end. p.hand is', p.hand, 'd.hand is', d.hand);
+    // console.log('discard pile is', discardPile);
+    // console.log('deck is', cards.deck)
 };
 
 function deal () {
@@ -263,10 +261,10 @@ function deal () {
     p.cardCounter++;
     cardPop(d);
     d.cardCounter++;
-    console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
-    console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
-    console.log(p.hand, 'is p.hand');
-    console.log(d.hand, 'is d.hand');
+    // console.log(`You got [${p.hand[0].cardNum} of ${p.hand[0].suit}] and [${p.hand[1].cardNum} of ${p.hand[1].suit}]`);
+    // console.log(`Dealer's cards are [${d.hand[0].cardNum} of ${d.hand[0].suit}] and [${d.hand[1].cardNum} of ${d.hand[1].suit}]`);
+    // console.log(p.hand, 'is p.hand');
+    // console.log(d.hand, 'is d.hand');
     pCount();
     d.hiddenScore = 0;
     d.score = 0;
@@ -283,7 +281,12 @@ function deal () {
 function cardPop(player) {
     player.hand.push(cards.deck.pop());
     $(`#${player.name}-space`).append(`<span id="${player.name}-${player.cardCounter}"><img class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" id="cards-${player.name}-${player.cardCounter}" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></span>`);
-}
+};
 
+function hit() {
+    cardPop(p);
+    // console.log('p.hand is', p.hand);
+    p.cardCounter++;
+    pCount();
+};
 
- 
