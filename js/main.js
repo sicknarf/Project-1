@@ -174,13 +174,13 @@ function dealerAI() {
             animateAnnouncementsBox();
             $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
             $('#deal').show();
-        } else if(d.score === 21 && d.hand.length === 2 && p.hand.length !== 2){
+        } else if(d.score === 21 && d.hand.length === 2){
             $('#game-stats').html('the dealer got Blackjack, you did not');
             animateGameStats();
             animateAnnouncementsBox();
             $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
             $('#deal').show();
-        } else if (p.score === 21 && d.score === 21 && p.hand.length === 2 && d.hand.length !== 2) {
+        } else if (p.score === 21 && d.score === 21 && p.hand.length === 2) {
             $('#game-stats').html('you got Blackjack, the dealer did not');
             animateGameStats();
             animateAnnouncementsBox();

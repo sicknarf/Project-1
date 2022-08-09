@@ -113,4 +113,5 @@ button {
 #playing-space {
     display:none;
     --animate-duration:.75s;
+    padding: 20px 0 20px 0;
 }
