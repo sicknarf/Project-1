@@ -10,7 +10,7 @@ class Deck{
             });
         });
         };
-    shuffle(){ //TIL about the fisher-yates algorithm
+    shuffle(){
         for(let i = this.deck.length - 1; i > 0; i--){
             const j = Math.floor(Math.random() * (i + 1));
             const temp = this.deck[i];
@@ -64,7 +64,8 @@ let currentBet = 0;
 $(function(){ 
     $('#initialize').click(init);
     $('#reset-game').click(init);
-    $('#deal-again').hide();
+    hidePlays();
+    $('#player-hand, #dealer-hand, #deal-again').hide();
     $('#hit').click(hit);
     $('#stay').click(()=>{
         $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
@@ -74,16 +75,42 @@ $(function(){
         dealerAI();
     });
     $('#deal-again').click(()=> { 
-        clearHands();
-        deal();
-        $('#announcements').html('');
-        pCount();
-        $('#deal-again').hide();
+        if(currentBet > 0){
+            clearHands();
+            deal();
+            $('#announcements').html('');
+            pCount();
+            $('#deal-again').hide();
+            showPlays()
+            $('#bet-notifications').html('');
+            $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+        } else if(currentBet <= 0){
+            $('#bet-notifications').css('background-color','pink');
+            $('#bet-notifications').html('you have to bet more than that');
+        }
     });
     $('#bet-down').click(()=>{modifyBet(-1)});
     $('#bet-up').click(()=>{modifyBet(1)});
     $('#bet-amount').click(updateBet);
+    $('#all-in').click(()=>{
+        currentBet = p.chips;
+        p.chips = 0;
+        betDisplay();
+    })
     $('#clear-bet').click(clearBet);
+    $('#deal').click(()=>{
+        if(currentBet > 0){
+            deal();
+            $('#bet-notifications').html('');
+            $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+            showPlays()
+            $('#player-hand, #dealer-hand').show();
+            $('#deal').hide();
+        } else if(currentBet <= 0){
+            $('#bet-notifications').css('background-color','pink');
+            $('#bet-notifications').html('you have to bet more than that');
+        }
+    })
 });
 
 init();
@@ -101,11 +128,7 @@ function init(){
     $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
-    $('#chips-left').html(p.chips);
-    $('#bet-pool').html(currentBet);
-    deal();
-    pCount();
-    // console.log(d, 'is dealer')
+    betDisplay();
     $('#bet-amount').html(`${betAmounts[betID]}`);
 }
 
@@ -191,8 +214,8 @@ function dealerAI() {
             push()
             $('#deal-again').show();
         } else if (d.score > 21){
-            $('#game-stats').html('dealer bust!');
             animateGameStats();
+            $('#game-stats').html('dealer bust!');
             win()
         } else if (21-d.score === 21-p.score){
             push()
@@ -294,8 +317,7 @@ function updateBet() {
         $('#bet-notifications').css('background-color','pink');
         $('#bet-notifications').html('you can\'t bet that much!');
     };
-    $('#chips-left').html(p.chips);
-    $('#bet-pool').html(currentBet);
+    betDisplay();
     $('#bet-amount').html(`${betAmounts[betID]}`);
     if (p.chips < 1000 && p.chips >= 500 && betID > 5){
         betID = 5;
@@ -388,16 +410,42 @@ function push() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
     $('#deal-again').show();
+    p.chips = p.chips + currentBet;
+    currentBet = 0;
+    betDisplay();
+    hidePlays();
 }
 
 function lose() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
     $('#deal-again').show();
+    currentBet = 0;
+    $('#bet-pool').html(currentBet);
+    hidePlays()
 }
 
 function win() {
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
     $('#deal-again').show();
+    p.chips = p.chips + (currentBet*2);
+    currentBet = 0;
+    betDisplay();
+    hidePlays();
+}
+
+function hidePlays() {
+    setTimeout(()=>{$('#hit, #stay, #double').hide()}, '800')
+    $('#hit, #stay, #double').addClass('animate__animated animate__fadeOut');
+}
+
+function showPlays() {
+    $('#hit, #stay, #double').removeClass('animate__fadeOut');
+    $('#hit, #stay, #double').show();
+}
+
+function betDisplay() {
+    $('#chips-left').html(p.chips);
+    $('#bet-pool').html(currentBet);
 }
