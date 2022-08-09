@@ -64,7 +64,7 @@ let currentBet = 0;
 $(function(){ 
     $('#initialize').click(init);
     $('#reset-game').click(init);
-    $('#deal').hide();
+    $('#deal-again').hide();
     $('#hit').click(hit);
     $('#stay').click(()=>{
         $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
@@ -73,16 +73,17 @@ $(function(){
         $('#announcements').html('');
         dealerAI();
     });
-    $('#deal').click(()=> { 
+    $('#deal-again').click(()=> { 
         clearHands();
         deal();
         $('#announcements').html('');
         pCount();
-        $('#deal').hide();
+        $('#deal-again').hide();
     });
     $('#bet-down').click(()=>{modifyBet(-1)});
     $('#bet-up').click(()=>{modifyBet(1)});
     $('#bet-amount').click(updateBet);
+    $('#clear-bet').click(clearBet);
 });
 
 init();
@@ -140,9 +141,7 @@ function pCount() {
         $('#stay').prop('disabled', true);
         $('#game-stats').html('BUST');
         animateGameStats();
-        animateAnnouncementsBox();
-        $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
-        $('#deal').show();
+        lose();
     }
     setTimeout(()=>{$('#player-hand-count').html(p.score)}, '400');
 };
@@ -179,43 +178,28 @@ function dealerAI() {
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('#game-stats').html('both players got Blackjack!');
             animateGameStats();
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
-            $('#deal').show();
+            push();
         } else if(d.score === 21 && d.hand.length === 2){
             $('#game-stats').html('the dealer got Blackjack, you did not');
             animateGameStats();
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
-            $('#deal').show();
+            lose();
         } else if (p.score === 21 && d.score === 21 && p.hand.length === 2) {
             $('#game-stats').html('you got Blackjack, the dealer did not');
             animateGameStats();
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
-            $('#deal').show();
+            win()
         } else if(d.score === 21 && p.score === 21) {
-            animateAnnouncementsBox();
-            $('#announcements').html('<im class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
-            $('#deal').show();
+            push()
+            $('#deal-again').show();
         } else if (d.score > 21){
             $('#game-stats').html('dealer bust!');
             animateGameStats();
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
-            $('#deal').show();
+            win()
         } else if (21-d.score === 21-p.score){
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
-            $('#deal').show();
+            push()
         } else if(21-d.score < 21-p.score){
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
-            $('#deal').show();
+            lose();
         } else if(21-d.score > 21-p.score){
-            animateAnnouncementsBox();
-            $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
-            $('#deal').show();
+            win();
         } else {
             console.log('error. find out what happened.');
             $('#game-stats').html('an unexpected error has occurred');
@@ -302,31 +286,31 @@ function hit() {
 
 function updateBet() {
     if(p.chips-betAmounts[betID] >= 0){
-        p.chips = p.chips - betAmounts[betID]; console.log('updateBet run line 304');
-        currentBet = currentBet + betAmounts[betID];console.log('updateBet run line 305');
+        p.chips = p.chips - betAmounts[betID];
+        currentBet = currentBet + betAmounts[betID];
         $('#bet-notifications').html('');
         $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
     } else if (p.chips-betAmounts[betID] < 0){
         $('#bet-notifications').css('background-color','pink');
         $('#bet-notifications').html('you can\'t bet that much!');
     };
-    $('#chips-left').html(p.chips);console.log('updateBet run line 306');
-    $('#bet-pool').html(currentBet);console.log('updateBet run line 307');
-    $('#bet-amount').html(`${betAmounts[betID]}`);console.log('updateBet run line 308');
+    $('#chips-left').html(p.chips);
+    $('#bet-pool').html(currentBet);
+    $('#bet-amount').html(`${betAmounts[betID]}`);
     if (p.chips < 1000 && p.chips >= 500 && betID > 5){
-        betID = 5;console.log('updateBet run line 310');
+        betID = 5;
     } else if (p.chips < 500 && betID > 4){
-        betID = 4;console.log('updateBet run line 312');
+        betID = 4;
     } else if (p.chips < 250 && betID > 3){
-        betID = 3;console.log('updateBet run line 314');
+        betID = 3;
     } else if (p.chips < 100 && betID > 2){
-        betID = 2;console.log('updateBet run line 316');
+        betID = 2;
     } else if (p.chips < 25 && betID > 1){
-        betID = 1;console.log('updateBet run line 318');
+        betID = 1;
     } else if (p.chips < 5) {
-        betID = 0;console.log('updateBet run line 320');
+        betID = 0;
     };
-    $('#bet-amount').html(`${betAmounts[betID]}`);console.log('updateBet run line 322');
+    $('#bet-amount').html(`${betAmounts[betID]}`);
     
 }
 
@@ -391,10 +375,29 @@ function modifyBet(direction) {
     $('#bet-amount').html(`${betAmounts[betID]}`)
 }
 
-function addBet() { 
-    // adds current bet selection and subtracts from p.chips
+function clearBet() {
+    p.chips = p.chips + currentBet;
+    currentBet = currentBet - currentBet;
+    $('#chips-left').html(p.chips);
+    $('#bet-pool').html(currentBet);
+    $('#bet-notifications').html('');
+    $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
 }
 
-function clearBet() {
-    // subtracts current bet selection and adds to p.chips
+function push() {
+    animateAnnouncementsBox();
+    $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
+    $('#deal-again').show();
+}
+
+function lose() {
+    animateAnnouncementsBox();
+    $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
+    $('#deal-again').show();
+}
+
+function win() {
+    animateAnnouncementsBox();
+    $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
+    $('#deal-again').show();
 }
