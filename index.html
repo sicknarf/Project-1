@@ -23,6 +23,8 @@
 <body>
     <header>
         <nav id="top-menu">
+            <div class="menuItems" id="menu-bgm-pause">	&#128264;</div>
+            <div class="menuItems" id="menu-bgm-play">&#128266;</div>
             <div class="menuItems" id="reset-game">Reset Game</div>
         </nav>
     </header>
@@ -45,11 +47,11 @@
           <div class="col text-center col-6"> 
                 <ul id="dealer-space">
                 </ul>
-                <div class="row">
-                    <div class="col text-right col-6">
+                <div class="row justify-content-center">
+                    <div class="col col-4 text-right">
                         <span class="animate__animated animate__fadeIn animate__delay-1s" id="dealer-hand">dealer's hand:&nbsp;<span id="dealer-hand-count">0</span></span>
                     </div>
-                    <div class="col text-left col-6">
+                    <div class="col col-4 text-left">
                         <span id="game-stats"></span>
                     </div>
                 </div>
@@ -65,11 +67,11 @@
             <div class="col col-3 text-right">
             </div>
             <div class="col col-6 text-center" >
-                <div class="row">
-                    <div class="col text-right col-6">
+                <div class="row justify-content-center">
+                    <div class="col text-right col-4">
                         <span class="animate__animated animate__fadeIn animate__delay-1s" id="player-hand">your hand:&nbsp;<span id="player-hand-count">0</span></span>
                     </div>
-                    <div class="col text-left col-6">
+                    <div class="col text-left col-4">
                         <span id="current-bet">$<span id="bet-pool"></span>&nbsp;is your current bet</span>
                     </div>
                 </div>
@@ -121,10 +123,22 @@
             <button type="button" class="btn btn-danger col-2" id="broke">you ran out of money.<br>game over!<br>try again?</button>
         </div>
     </div>
-    <div class="form-check form-switch" id="bgm-toggle">
+    <!-- <div class="form-check form-switch" id="bgm-toggle">
         <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked">Music by Bensound</label>
-      </div>
+        <label class="form-check-label" for="flexSwitchCheckChecked">&#128266;</label>
+    </div> -->
+    <div id="player-parent">
+        <audio id="bg-player"><source src="assets/sounds/blackjack-bgm.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="flip-sound"><source src="assets/sounds/card-flip.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="bet-sound"><source src="assets/sounds/chip-bet.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="shuffle-sound"><source src="assets/sounds/shuffle.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="all-in-sound"><source src="assets/sounds/all-in.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="announce-sound"><source src="assets/sounds/match-end.mp3" type="audio/mpeg"></audio>
+        <audio class="game-sounds" id="deal-sound"><source src="assets/sounds/deal.mp3" type="audio/mpeg"></audio>
+    </div>
+    <div id="credits">
+        <span>music by Bensound</span>
+    </div>
     <div class="preload-elements">
         <img src="assets/playable-cards/2_of_clubs.png">
         <img src="assets/playable-cards/2_of_diamonds.png">

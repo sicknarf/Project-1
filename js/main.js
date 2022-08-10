@@ -53,6 +53,17 @@ const d = {
     cardDelay:0,
 };
 
+const soundID = {
+    flip: 0,
+    bet: 1,
+    shuffle: 2,
+    allIn: 3,
+    announcement: 4,
+    deal: 5,
+}
+
+const volumeID = [0.2, 0.4, 0.2, 0.5, 0.3, 0.3]
+
 const betAmounts = [1, 5, 25, 100, 250, 500, 1000]; // 0-6
 let betID = 3
 let cards = new Deck;
@@ -60,11 +71,39 @@ let discardPile = [];
 let aceCheck = false;
 let currentBet = 0;
 
+
+
 $(function(){ 
+    $('audio#bg-player').prop('volume', 0.2);
+    $('audio#flip-sound').prop('volume', 0.4);
+    $('audio#bet-sound').prop('volume', 0.2);
+    $('audio#shuffle-sound').prop('volume', 0.5);
+    $('audio#all-in-sound').prop('volume', 0.3);
+    $('audio#announce-sound').prop('volume', 0.3);
+    $('audio#deal-sound').prop('volume', 0.3);
+
+    $('#menu-bgm-pause').click(()=>{
+        $('audio#bg-player').prop('volume', 0);
+        $('audio#flip-sound').prop('volume', 0);
+        $('audio#bet-sound').prop('volume', 0);
+        $('audio#shuffle-sound').prop('volume', 0);
+        $('audio#all-in-sound').prop('volume', 0);
+        $('audio#announce-sound').prop('volume', 0);
+        $('audio#deal-sound').prop('volume', 0);
+    });
+    $('#menu-bgm-play').click(()=>{
+        $('audio#bg-player').prop('volume', 0.2);
+        $('audio#flip-sound').prop('volume', 0.4);
+        $('audio#bet-sound').prop('volume', 0.2);
+        $('audio#shuffle-sound').prop('volume', 0.5);
+        $('audio#all-in-sound').prop('volume', 0.3);
+        $('audio#announce-sound').prop('volume', 0.3);
+        $('audio#deal-sound').prop('volume', 0.3);
+    });
     $('#initialize').click(init);
     $('#reset-game').click(init);
     $('#broke').click(init);
-    $('#hit').click(hit);
+    $('#hit').click(hit); 
     $('#double').click(()=>{
         p.chips = p.chips - currentBet;
         currentBet = currentBet * 2;
@@ -72,8 +111,13 @@ $(function(){
         hit();
         betDisplay();
         $('#betting-space').clone().appendTo('#betting-space');
+        $('audio.game-sounds')[soundID.flip].play()
+        setTimeout(() => {
+            $('audio.game-sounds')[soundID.bet].play()
+        }, 500);
     })
     $('#stay').click(()=>{
+        $('audio.game-sounds')[soundID.flip].play()
         $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></li><li style="margin-left:-100px" id="dealer-1"></li>`);
         dealerAI();})
     $('#deal-again').click(()=> { 
@@ -89,6 +133,7 @@ $(function(){
     $('#betting-time').click(updateBet);
     $('#all-in').click(()=>{
         if(p.chips > 0){
+            $('audio.game-sounds')[soundID.allIn].play()
             currentBet = currentBet + p.chips;
             if(p.chips >= 2000){
                 for (let i = 0; i < 8; i++){
@@ -140,9 +185,13 @@ $(function(){
             $('#bet-notifications').html('you have to bet more than that');
         }
     })
+
+
 });
 
 function init(){
+    $('audio#bg-player')[0].play()
+    $('audio.game-sounds')[soundID.shuffle].play()
     $('#playing-space').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
     setTimeout(()=>{$('#splash').hide()}, '800');
@@ -176,6 +225,7 @@ function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
     d.cardDelay = 0;
+    $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', true);
     $('#deal-again').hide();
@@ -276,6 +326,7 @@ function modifyBet(direction) {
 function updateBet() {
     if(p.chips > 0){
         $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/${betID}.png"></li>`);
+        $('audio.game-sounds')[soundID.bet].play()
     }
     if(p.chips-betAmounts[betID] >= 0){
         p.chips = p.chips - betAmounts[betID];
@@ -383,16 +434,14 @@ function pCount() {
 
 function hit() {
     $('#double').prop('disabled', true);
+    $('audio.game-sounds')[soundID.flip].play()
     cardPop(p);
     p.cardCounter++;
     pCount();
 };
 
-function cardPopFirst(player){
-    
-};
-
 function cardPop(player) {
+    $('audio.game-sounds')[soundID.flip].play()
     player.hand.push(cards.deck.pop());
     $(`#${player.name}-space`).append(`<li style="margin-left:-100px" id="${player.name}-${player.cardCounter}"><img style="filter: drop-shadow(-4px 4px 3px #333)" class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" id="cards-${player.name}-${player.cardCounter}" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></li>`);
 };
@@ -481,7 +530,6 @@ function animateGameStats() {
 function animateAnnouncementsBox() {
     $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
-    console.log('animateAnnouncementsBox running')
 }
 
 function push() {
@@ -494,6 +542,8 @@ function push() {
     setTimeout((betDisplay), '1500');
     hidePlays();
     $('.poker-chip').removeClass('animate__fadeInBottomRight')
+    setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
+    setTimeout(() => {$('audio.game-sounds')[soundID.bet].play()}, 2000);
     setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutBottomRight')}, 2000)
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
@@ -510,7 +560,8 @@ function lose() {
     } else if (p.chips === 0){
         setTimeout(()=>{$('#broke').show()}, '1200');
     }
-    $('.poker-chip').removeClass('animate__fadeInBottomRight')
+    $('.poker-chip').removeClass('animate__fadeInBottomRight');
+    setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
     setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutUpBig')}, 2000)
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
@@ -525,6 +576,8 @@ function win() {
     setTimeout((betDisplay), '1500');
     hidePlays();
     $('.poker-chip').removeClass('animate__fadeInBottomRight');
+    setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
+    setTimeout(() => {$('audio.game-sounds')[soundID.bet].play()}, 2000);
     setTimeout(()=>{$('.poker-chip').addClass('animate__fadeInDownBig')}, 500);
     setTimeout(()=>{$('#betting-space').clone().appendTo('#betting-space')}, 700);
     setTimeout(()=>{$('.poker-chip').removeClass('animate__fadeInDownBig')}, 1500);

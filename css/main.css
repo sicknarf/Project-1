@@ -167,6 +167,11 @@ ul {
 }
 #bgm-toggle {
     position: absolute;
-    left: 5px;
+    left: 20px;
+    top: 12px;
+}
+#credits {
+    position: absolute;
+    right: 5px;
     bottom: 5px;
 }
