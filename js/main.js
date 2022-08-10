@@ -191,7 +191,6 @@ $(function(){
 
 function init(){
     $('audio#bg-player')[0].play()
-    $('audio.game-sounds')[soundID.shuffle].play()
     $('#playing-space').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
     setTimeout(()=>{$('#splash').hide()}, '800');
@@ -217,6 +216,7 @@ function init(){
     $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
+    $('audio.game-sounds')[soundID.shuffle].play()
     betDisplay();
     $('#bet-amount').html(`${betAmounts[betID]}`);
 }
@@ -515,6 +515,7 @@ function clearHands() {
         // console.log('discard pile got large. creating new deck and shuffling.')
         cards = new Deck
         cards.shuffle();
+        $('audio.game-sounds')[soundID.shuffle].play()
         discardPile = []
     }
     // console.log('clearHands end. p.hand is', p.hand, 'd.hand is', d.hand);
