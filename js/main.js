@@ -72,7 +72,9 @@ $(function(){
         hit();
         betDisplay();
     })
-    $('#stay').click(dealerAI)
+    $('#stay').click(()=>{
+        $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
+        dealerAI();})
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
             deal();
@@ -137,13 +139,13 @@ function scoreCount(player){
     player.score = 0
     let handLength = player.hand.length
     for(let i = 0; i < handLength; i++){
-        player.score = player.score + parseInt(scoreCounter[player.hand[i].cardNum]);
+        player.score = player.score + parseInt(scoreCounter[player.hand[i].cardNum]); console.log('current hand is', player.hand[i])
     }
 };
 
 function pCount() {
     aceChecker(p.hand);
-    p.score = 0;
+    // p.score = 0;
     scoreCount(p);
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
@@ -187,12 +189,12 @@ function animateAnnouncementsBox() {
 }
 
 function dealerAI() {
-    d.score = 0;
+    // d.score = 0;
     scoreCount(d);
-    $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
+    // $('#dealer-space').html(`<span id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></span><span id="dealer-1"></span>`);
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
-    $('#announcements').html('');
+    // $('#announcements').html('');
     $('#hit').prop('disabled', true);
     $('#stay').prop('disabled', true);
     aceChecker(d.hand);
@@ -233,9 +235,8 @@ function dealerAI() {
             console.log('error. find out what happened.');
             $('#game-stats').html('an unexpected error has occurred');
             };
-        setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '400');
-        // console.log('d.hand is', d.hand);
-        // console.log('d.score is', d.score)
+        $('#dealer-hand-count').html(d.score)
+
     }
     if (d.score < 17) {
         d.cardCounter++;
@@ -297,7 +298,6 @@ function deal () {
     d.cardCounter++;
     pCount();
     d.hiddenScore = 0;
-    d.score = 0;
     for(let i = 1; i < d.hand.length; i++){
         d.hiddenScore = d.hiddenScore + parseInt(scoreCounter[d.hand[i].cardNum]);
     };
@@ -316,7 +316,6 @@ function cardPop(player) {
 function hit() {
     $('#double').prop('disabled', true);
     cardPop(p);
-    // console.log('p.hand is', p.hand);
     p.cardCounter++;
     pCount();
 };
