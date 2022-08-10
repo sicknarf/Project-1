@@ -23,3 +23,5 @@ Your bet isn't final until you deal. You can always take the pool back with the 
 Hit means you ask the dealer to deal you the next card. Stand means your turn ends, and then dealer will keep drawing cards until they hit 17 or higher. If they go over 21, you win! But if they're closer than you to 21, you will lose. Otherwise, if you tie, it is called a push, and you get your bet back.
 
 For additional resources as to when to hit or stand, you can refer [here](https://blog.betway.com/casino/blackjack-strategy-101-what-is-the-hit-stand-betting-system/)
+
+#### [get started now!](index.html)
