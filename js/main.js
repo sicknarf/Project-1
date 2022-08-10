@@ -246,15 +246,15 @@ function updateBet() {
     $('#bet-amount').html(`${betAmounts[betID]}`);
     if (p.chips < 1000 && p.chips >= 500 && betID > 5){
         betID = 5;
-    } else if (p.chips < 500 && betID > 4){
+    } if (p.chips < 500 && betID > 4){
         betID = 4;
-    } else if (p.chips < 250 && betID > 3){
+    } if (p.chips < 250 && betID > 3){
         betID = 3;
-    } else if (p.chips < 100 && betID > 2){
+    } if (p.chips < 100 && betID > 2){
         betID = 2;
-    } else if (p.chips < 25 && betID > 1){
+    } if (p.chips < 25 && betID > 1){
         betID = 1;
-    } else if (p.chips < 5) {
+    } if (p.chips < 5) {
         betID = 0;
     };
     $('#bet-amount').html(`${betAmounts[betID]}`);
