@@ -72,7 +72,7 @@ $(function(){
         betDisplay();
     })
     $('#stay').click(()=>{
-        $('#dealer-space').html(`<li style="z-index:-1" id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></li><li style="margin-left:-100px" id="dealer-1"></li>`);
+        $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></li><li style="margin-left:-100px" id="dealer-1"></li>`);
         dealerAI();})
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
@@ -152,7 +152,8 @@ function deal () {
     }
     showPlays();
     clearHands();
-    cardPopFirst(p);
+    p.hand.push(cards.deck.pop());
+    $(`#${p.name}-space`).append(`<li style="margin-left:-30px" id="${p.name}-${p.cardCounter}"><img class="animate__animated animate__fadeInDownBig animate__delay-${p.cardDelay-1}s" id="cards-${p.name}-${p.cardCounter}" src="assets/playable-cards/${p.hand[p.cardCounter].cardNum}_of_${p.hand[p.cardCounter].suit}.png"></li>`);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
     cardPop(p);
@@ -168,7 +169,7 @@ function deal () {
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0)')
-    $('#dealer-space').html(`<li id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></li><li style="margin-left:-100px" id="${d.name}-${d.cardCounter}"><img style="filter:drop-shadow(-4px 4px 6px #333)" class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></li>`);
+    $('#dealer-space').html(`<li style="margin-left:-30px" id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></li><li style="margin-left:-100px" id="${d.name}-${d.cardCounter}"><img style="filter:drop-shadow(-4px 4px 6px #333)" class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></li>`);
 };
 
 function modifyBet(direction) {
@@ -336,8 +337,7 @@ function hit() {
 };
 
 function cardPopFirst(player){
-    player.hand.push(cards.deck.pop());
-    $(`#${player.name}-space`).append(`<li id="${player.name}-${player.cardCounter}"><img class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" id="cards-${player.name}-${player.cardCounter}" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></li>`);
+    
 };
 
 function cardPop(player) {
@@ -466,4 +466,3 @@ function win() {
     setTimeout((betDisplay), '1500');
     hidePlays();
 }
-
