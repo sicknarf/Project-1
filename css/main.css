@@ -3,6 +3,7 @@ header {
 }
 :root {
     --animate-duration: 200ms;
+    user-select: none;
 }
 body {
     color:black;
@@ -30,6 +31,10 @@ nav div {
   nav > div:last-child {
     margin-left: auto;
   }
+tbody {
+    justify-content: center;
+    text-align: center;
+}
 .menuItems:hover {
     background-color: rgb(40,150,40);
 }
@@ -159,4 +164,9 @@ ul {
 
 #dealer-space > li {
     margin-left: -30px;
+}
+#bgm-toggle {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
 }

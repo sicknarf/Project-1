@@ -154,6 +154,7 @@ function init(){
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
     $('#announcements-box').css('background-color', '');
     hidePlays();
+    clearBet();
     p.score = 0;
     d.score = 0;
     p.hand = [];

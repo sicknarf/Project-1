@@ -15,7 +15,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="css/main.css">
     <link rel="icon" href="assets/favicon.png">
 
@@ -91,7 +91,7 @@
             </div>
             <div class="col col-3" id="bets-space">
                 <div class="row">
-                    <div class="btn-group" role="group" aria-label="Basic example" id="betting-buttons">
+                    <div class="btn-group col col-7" role="group" aria-label="Basic example" id="betting-buttons">
                         <button type="button" class="btn btn-outline-light col-3 text-right" id="bet-down">-</button>
                         <button type="button" class="btn btn-success col-6 text-center" id="betting-time">&nbsp;&nbsp;&nbsp;Bet&nbsp;&nbsp;&nbsp;<br>$<span id="bet-amount"></span></button>
                         <button type="button" class="btn btn-outline-light col-3 text-left" id="bet-up">+</button>
@@ -99,9 +99,9 @@
                 </div>
                 <div class="row justify-content-start">
                     <div>
-                        <button type="button" class="btn btn-outline-danger col-12" id="all-in">all in</button>
-                        <button type="button" class="btn btn-outline-warning col-12" id="clear-bet">clear bet</button>
-                        <button type="button" class="btn btn-light col-12" id="deal">deal</button>
+                        <button type="button" class="btn btn-outline-danger col col-6" id="all-in">all in</button>
+                        <button type="button" class="btn btn-outline-warning col col-6" id="clear-bet">clear bet</button>
+                        <button type="button" class="btn btn-light col col-6" id="deal">deal</button>
                     </div>
                 </div>
                 <div class="row justify-content-start">
@@ -117,73 +117,75 @@
                 </div>
             </div>
         </div>
- 
-        
         <div class="row justify-content-center">
             <button type="button" class="btn btn-danger col-2" id="broke">you ran out of money.<br>game over!<br>try again?</button>
         </div>
-        <div class="preload-elements">
-            <img src="assets/playable-cards/2_of_clubs.png">
-            <img src="assets/playable-cards/2_of_diamonds.png">
-            <img src="assets/playable-cards/2_of_hearts.png">
-            <img src="assets/playable-cards/2_of_spades.png">
-            <img src="assets/playable-cards/3_of_clubs.png">
-            <img src="assets/playable-cards/3_of_diamonds.png">
-            <img src="assets/playable-cards/3_of_hearts.png">
-            <img src="assets/playable-cards/3_of_spades.png">
-            <img src="assets/playable-cards/4_of_clubs.png">
-            <img src="assets/playable-cards/4_of_diamonds.png">
-            <img src="assets/playable-cards/4_of_hearts.png">
-            <img src="assets/playable-cards/4_of_spades.png">
-            <img src="assets/playable-cards/5_of_clubs.png">
-            <img src="assets/playable-cards/5_of_diamonds.png">
-            <img src="assets/playable-cards/5_of_hearts.png">
-            <img src="assets/playable-cards/5_of_spades.png">
-            <img src="assets/playable-cards/6_of_clubs.png">
-            <img src="assets/playable-cards/6_of_diamonds.png">
-            <img src="assets/playable-cards/6_of_hearts.png">
-            <img src="assets/playable-cards/6_of_spades.png">
-            <img src="assets/playable-cards/7_of_clubs.png">
-            <img src="assets/playable-cards/7_of_diamonds.png">
-            <img src="assets/playable-cards/7_of_hearts.png">
-            <img src="assets/playable-cards/7_of_spades.png">
-            <img src="assets/playable-cards/8_of_clubs.png">
-            <img src="assets/playable-cards/8_of_diamonds.png">
-            <img src="assets/playable-cards/8_of_hearts.png">
-            <img src="assets/playable-cards/8_of_spades.png">
-            <img src="assets/playable-cards/9_of_clubs.png">
-            <img src="assets/playable-cards/9_of_diamonds.png">
-            <img src="assets/playable-cards/9_of_hearts.png">
-            <img src="assets/playable-cards/9_of_spades.png">
-            <img src="assets/playable-cards/10_of_clubs.png">
-            <img src="assets/playable-cards/10_of_diamonds.png">
-            <img src="assets/playable-cards/10_of_hearts.png">
-            <img src="assets/playable-cards/10_of_spades.png">
-            <img src="assets/playable-cards/jack_of_clubs.png">
-            <img src="assets/playable-cards/jack_of_diamonds.png">
-            <img src="assets/playable-cards/jack_of_hearts.png">
-            <img src="assets/playable-cards/jack_of_spades.png">
-            <img src="assets/playable-cards/queen_of_clubs.png">
-            <img src="assets/playable-cards/queen_of_diamonds.png">
-            <img src="assets/playable-cards/queen_of_hearts.png">
-            <img src="assets/playable-cards/queen_of_spades.png">
-            <img src="assets/playable-cards/king_of_clubs.png">
-            <img src="assets/playable-cards/king_of_diamonds.png">
-            <img src="assets/playable-cards/king_of_hearts.png">
-            <img src="assets/playable-cards/king_of_spades.png">
-            <img src="assets/playable-cards/ace_of_clubs.png">
-            <img src="assets/playable-cards/ace_of_diamonds.png">
-            <img src="assets/playable-cards/ace_of_hearts.png">
-            <img src="assets/playable-cards/ace_of_spades.png">
-            <img src="assets/playable-cards/aceOne_of_clubs.png">
-            <img src="assets/playable-cards/aceOne_of_diamonds.png">
-            <img src="assets/playable-cards/aceOne_of_hearts.png">
-            <img src="assets/playable-cards/aceOne_of_spades.png">
-            <img src="assets/blackjack.png">
-            <img src="assets/push.png">
-            <img src="assets/you-lost.png">
-            <img src="assets/you-won.png">
-        </div>
+    </div>
+    <div class="form-check form-switch" id="bgm-toggle">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+        <label class="form-check-label" for="flexSwitchCheckChecked">Music by Bensound</label>
+      </div>
+    <div class="preload-elements">
+        <img src="assets/playable-cards/2_of_clubs.png">
+        <img src="assets/playable-cards/2_of_diamonds.png">
+        <img src="assets/playable-cards/2_of_hearts.png">
+        <img src="assets/playable-cards/2_of_spades.png">
+        <img src="assets/playable-cards/3_of_clubs.png">
+        <img src="assets/playable-cards/3_of_diamonds.png">
+        <img src="assets/playable-cards/3_of_hearts.png">
+        <img src="assets/playable-cards/3_of_spades.png">
+        <img src="assets/playable-cards/4_of_clubs.png">
+        <img src="assets/playable-cards/4_of_diamonds.png">
+        <img src="assets/playable-cards/4_of_hearts.png">
+        <img src="assets/playable-cards/4_of_spades.png">
+        <img src="assets/playable-cards/5_of_clubs.png">
+        <img src="assets/playable-cards/5_of_diamonds.png">
+        <img src="assets/playable-cards/5_of_hearts.png">
+        <img src="assets/playable-cards/5_of_spades.png">
+        <img src="assets/playable-cards/6_of_clubs.png">
+        <img src="assets/playable-cards/6_of_diamonds.png">
+        <img src="assets/playable-cards/6_of_hearts.png">
+        <img src="assets/playable-cards/6_of_spades.png">
+        <img src="assets/playable-cards/7_of_clubs.png">
+        <img src="assets/playable-cards/7_of_diamonds.png">
+        <img src="assets/playable-cards/7_of_hearts.png">
+        <img src="assets/playable-cards/7_of_spades.png">
+        <img src="assets/playable-cards/8_of_clubs.png">
+        <img src="assets/playable-cards/8_of_diamonds.png">
+        <img src="assets/playable-cards/8_of_hearts.png">
+        <img src="assets/playable-cards/8_of_spades.png">
+        <img src="assets/playable-cards/9_of_clubs.png">
+        <img src="assets/playable-cards/9_of_diamonds.png">
+        <img src="assets/playable-cards/9_of_hearts.png">
+        <img src="assets/playable-cards/9_of_spades.png">
+        <img src="assets/playable-cards/10_of_clubs.png">
+        <img src="assets/playable-cards/10_of_diamonds.png">
+        <img src="assets/playable-cards/10_of_hearts.png">
+        <img src="assets/playable-cards/10_of_spades.png">
+        <img src="assets/playable-cards/jack_of_clubs.png">
+        <img src="assets/playable-cards/jack_of_diamonds.png">
+        <img src="assets/playable-cards/jack_of_hearts.png">
+        <img src="assets/playable-cards/jack_of_spades.png">
+        <img src="assets/playable-cards/queen_of_clubs.png">
+        <img src="assets/playable-cards/queen_of_diamonds.png">
+        <img src="assets/playable-cards/queen_of_hearts.png">
+        <img src="assets/playable-cards/queen_of_spades.png">
+        <img src="assets/playable-cards/king_of_clubs.png">
+        <img src="assets/playable-cards/king_of_diamonds.png">
+        <img src="assets/playable-cards/king_of_hearts.png">
+        <img src="assets/playable-cards/king_of_spades.png">
+        <img src="assets/playable-cards/ace_of_clubs.png">
+        <img src="assets/playable-cards/ace_of_diamonds.png">
+        <img src="assets/playable-cards/ace_of_hearts.png">
+        <img src="assets/playable-cards/ace_of_spades.png">
+        <img src="assets/playable-cards/aceOne_of_clubs.png">
+        <img src="assets/playable-cards/aceOne_of_diamonds.png">
+        <img src="assets/playable-cards/aceOne_of_hearts.png">
+        <img src="assets/playable-cards/aceOne_of_spades.png">
+        <img src="assets/blackjack.png">
+        <img src="assets/push.png">
+        <img src="assets/you-lost.png">
+        <img src="assets/you-won.png">
     </div>
 </body>
 </html>
