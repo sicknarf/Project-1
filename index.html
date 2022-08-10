@@ -31,8 +31,8 @@
     <div class="container" id="splash">
         <div class="row justify-content-center">
             <div class="col col-12 text-center">
-                <div>Welcome to Blackjack! Have you read the rules? Are you ready to&nbsp;go? Good luck and may the odds be ever in your favor!</div>
-                <div><button class="btn btn-success col-4" id="initialize">I am ready!</button></div>
+                <div>Welcome to Blackjack! Have you read the rules?<br>Are you ready to&nbsp;go? In this game of Blackjack,<br>you'll be betting souls instead of dollars.</div>
+                <div><button class="btn btn-warning col-4" id="initialize">Praise the Sun!</button></div>
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
                         <span class="animate__animated animate__fadeIn animate__delay-1s" id="player-hand">your&nbsp;hand:&nbsp;<span id="player-hand-count">0</span></span>
                     </div>
                     <div class="col text-left col-4">
-                        <span id="current-bet">$<span id="bet-pool"></span>&nbsp;is&nbsp;your&nbsp;current&nbsp;bet</span>
+                        <span id="current-bet"><span id="bet-pool"></span>&nbsp;souls&nbsp;currently&nbsp;bet</span>
                     </div>
                 </div>
                 <ul id="player-space">
@@ -82,7 +82,7 @@
                 <br>
                 <br>
                 <div class="row justify-content-center">
-                    <button type="button" class="btn btn-success col-2 animate__animated animate__fadeInRight" id="hit">hit</button><button type="button" class="btn btn-danger col-2 animate__animated animate__fadeInLeft" id="stay">stay</button>
+                    <button type="button" class="btn btn-success col-2 animate__animated animate__fadeInRight" id="hit">hit</button><button type="button" class="btn btn-danger col-2 animate__animated animate__fadeInLeft" id="stay">stand</button>
                 </div>
                 <div class="row justify-content-center">
                     <button type="button" class="btn btn-warning col-3 animate__animated animate__fadeInDown" id="double">double</button>
@@ -95,7 +95,7 @@
                 <div class="row">
                     <div class="btn-group col col-7" role="group" aria-label="Basic example" id="betting-buttons">
                         <button type="button" class="btn btn-outline-light col-3 text-right" id="bet-down">-</button>
-                        <button type="button" class="btn btn-success col-6 text-center" id="betting-time">&nbsp;&nbsp;&nbsp;Bet&nbsp;&nbsp;&nbsp;<br>$<span id="bet-amount"></span></button>
+                        <button type="button" class="btn btn-success col-6 text-center" id="betting-time">&nbsp;&nbsp;&nbsp;Bet&nbsp;&nbsp;&nbsp;<br><span id="bet-amount"></span></button>
                         <button type="button" class="btn btn-outline-light col-3 text-left" id="bet-up">+</button>
                       </div>
                 </div>
