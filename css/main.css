@@ -149,3 +149,10 @@ button {
 #deal {
     margin: 0 0 10px 0;
 }
+
+ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    list-style: none;
+}
