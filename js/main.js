@@ -2,6 +2,7 @@ class Deck{
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
+        // const cardNums = ['ace', 'king'];
         const cardNums = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             cardNums.forEach((cardNum)=>{
@@ -70,6 +71,7 @@ $(function(){
         $('#hit').prop('disabled', true);
         hit();
         betDisplay();
+        $('#betting-space').clone().appendTo('#betting-space');
     })
     $('#stay').click(()=>{
         $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></li><li style="margin-left:-100px" id="dealer-1"></li>`);
@@ -150,7 +152,7 @@ function init(){
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
-    $('#announcements-box').css('background-color', 'rgba(50,50,50,0)');
+    $('#announcements-box').css('background-color', '');
     hidePlays();
     p.score = 0;
     d.score = 0;
@@ -351,13 +353,19 @@ function pCount() {
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
         scoreCount(p);
+        console.log('scoreCount(p) running')
         };
     if(p.score === 21 && p.hand.length === 2){
         $('#game-stats').html('you got Blackjack!');
-        animateGameStats();
-        animateAnnouncementsBox();
+        animateGameStats();console.log('line 358');
+        setTimeout(() => {
+            animateAnnouncementsBox();    
+        }, 1);
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/blackjack.png">');
-        $('#hit').prop('disabled', true);
+        setTimeout(() => {
+            $('#hit').prop('disabled', true);console.log('line 361');
+        }, 1);
+        $('#double').prop('disabled', true);
     } else if (p.score === 21) {
         $('#game-stats').html('you got 21!');
         animateGameStats();
@@ -471,7 +479,8 @@ function animateGameStats() {
 
 function animateAnnouncementsBox() {
     $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
-    $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)')
+    $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
+    console.log('animateAnnouncementsBox running')
 }
 
 function push() {
@@ -483,6 +492,9 @@ function push() {
     currentBet = 0;
     setTimeout((betDisplay), '1500');
     hidePlays();
+    $('.poker-chip').removeClass('animate__fadeInBottomRight')
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutBottomRight')}, 2000)
+    setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
 function lose() {
@@ -497,6 +509,9 @@ function lose() {
     } else if (p.chips === 0){
         setTimeout(()=>{$('#broke').show()}, '1200');
     }
+    $('.poker-chip').removeClass('animate__fadeInBottomRight')
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutUpBig')}, 2000)
+    setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
 function win() {
@@ -508,4 +523,10 @@ function win() {
     currentBet = 0;
     setTimeout((betDisplay), '1500');
     hidePlays();
+    $('.poker-chip').removeClass('animate__fadeInBottomRight');
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeInDownBig')}, 500);
+    setTimeout(()=>{$('#betting-space').clone().appendTo('#betting-space')}, 700);
+    setTimeout(()=>{$('.poker-chip').removeClass('animate__fadeInDownBig')}, 1500);
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutBottomRight')}, 2000);
+    setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }

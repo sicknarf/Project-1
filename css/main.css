@@ -156,3 +156,7 @@ ul {
 #betting-space img {
     height:75px;
 }
+
+#dealer-space > li {
+    margin-left: -30px;
+}
