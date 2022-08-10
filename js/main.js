@@ -87,7 +87,44 @@ $(function(){
     $('#betting-time').click(updateBet);
     $('#all-in').click(()=>{
         if(p.chips > 0){
-        currentBet = currentBet + p.chips;
+            currentBet = currentBet + p.chips;
+            if(p.chips >= 2000){
+                for (let i = 0; i < 8; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/4.png"></li>`);
+                    }, i*125); 
+                }
+            } else if(p.chips >= 750){
+                for (let i = 0; i < 8; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/3.png"></li>`);
+                    }, i*125); 
+                }
+            } else if(p.chips >= 500){
+                for (let i = 0; i < 12; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/2.png"></li>`);
+                    }, i*125); 
+                }
+            } else if(p.chips >= 250){
+                for (let i = 0; i < 3; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/3.png"></li>`);
+                    }, i*125); 
+                }
+            } else if(p.chips >= 100){
+                for (let i = 0; i < 7; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/2.png"></li>`);
+                    }, i*125); 
+                }
+            } else if(p.chips < 100){
+                for (let i = 0; i < 7; i++){
+                    setTimeout(() => {
+                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/1.png"></li>`);
+                    }, i*125); 
+            }
+        }
         p.chips = 0;
         betDisplay();
         }
@@ -234,6 +271,9 @@ function modifyBet(direction) {
 }
 
 function updateBet() {
+    if(p.chips > 0){
+        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/${betID}.png"></li>`);
+    }
     if(p.chips-betAmounts[betID] >= 0){
         p.chips = p.chips - betAmounts[betID];
         currentBet = currentBet + betAmounts[betID];
@@ -269,6 +309,9 @@ function clearBet() {
     $('#bet-pool').html(currentBet);
     $('#bet-notifications').html('');
     $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+    $('.poker-chip').removeClass('animate__fadeInBottomRight')
+    $('.poker-chip').addClass('animate__fadeOutBottomRight')
+    setTimeout(()=>{$('#betting-space').html('')}, 500)
 }
 
 function betDisplay() {

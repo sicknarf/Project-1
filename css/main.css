@@ -33,10 +33,6 @@ nav div {
 .menuItems:hover {
     background-color: rgb(40,150,40);
 }
-#dealer-icon {
-    height:100px;
-    display: none;
-}
 #card-icon {
     height: 200px;
 }
@@ -155,4 +151,8 @@ ul {
     flex-direction: row;
     justify-content: center;
     list-style: none;
+}
+
+#betting-space img {
+    height:75px;
 }
