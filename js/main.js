@@ -60,6 +60,7 @@ const soundID = {
     allIn: 3,
     announcement: 4,
     deal: 5,
+    cheatCode: 6,
 }
 
 const volumeID = [0.2, 0.4, 0.2, 0.5, 0.3, 0.3]
@@ -70,6 +71,7 @@ let cards = new Deck;
 let discardPile = [];
 let aceCheck = false;
 let currentBet = 0;
+let easterEgg = 0;
 
 
 
@@ -81,6 +83,7 @@ $(function(){
     $('audio#all-in-sound').prop('volume', 0.3);
     $('audio#announce-sound').prop('volume', 0.3);
     $('audio#deal-sound').prop('volume', 0.3);
+    $('audio#easter-egg-sound').prop('volume', 0.2);
 
     $('#menu-bgm-pause').click(()=>{
         $('audio#bg-player').prop('volume', 0);
@@ -90,6 +93,7 @@ $(function(){
         $('audio#all-in-sound').prop('volume', 0);
         $('audio#announce-sound').prop('volume', 0);
         $('audio#deal-sound').prop('volume', 0);
+        $('audio#easter-egg-sound').prop('volume', 0.01);
     });
     $('#menu-bgm-play').click(()=>{
         $('audio#bg-player').prop('volume', 0.2);
@@ -99,6 +103,7 @@ $(function(){
         $('audio#all-in-sound').prop('volume', 0.3);
         $('audio#announce-sound').prop('volume', 0.3);
         $('audio#deal-sound').prop('volume', 0.3);
+        $('audio#easter-egg-sound').prop('volume', 0.2);
     });
     $('#initialize').click(init);
     $('#reset-game').click(init);
@@ -321,6 +326,17 @@ function modifyBet(direction) {
         betID++
     }
     $('#bet-amount').html(`${betAmounts[betID]}`)
+    if (direction < 0){
+        easterEgg++
+    } else if (direction > 0){
+        easterEgg = 0
+    }
+    if (easterEgg === 15){
+        $('audio.game-sounds')[soundID.cheatCode].play()
+        p.chips = p.chips * 10;
+        easterEgg = 0;
+        betDisplay();
+    }
 }
 
 function updateBet() {
