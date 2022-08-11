@@ -24,4 +24,4 @@ Hit means you ask the dealer to deal you the next card. Stand means your turn en
 
 For additional resources as to when to hit or stand, you can refer [here](https://blog.betway.com/casino/blackjack-strategy-101-what-is-the-hit-stand-betting-system/)
 
-#### [get started now!](index.html)
+#### [get started now!](https://francis-project-one.netlify.app/)
