@@ -2,7 +2,6 @@ class Deck{
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
-        // const cardNums = ['ace', 'king'];
         const cardNums = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             cardNums.forEach((cardNum)=>{
@@ -65,7 +64,7 @@ const soundID = {
 
 const volumeID = [0.2, 0.4, 0.2, 0.5, 0.3, 0.3]
 
-const betAmounts = [1, 5, 25, 100, 250, 500, 1000]; // 0-6
+const betAmounts = [1, 5, 25, 100, 250, 500, 1000];
 let betID = 3
 let cards = new Deck;
 let discardPile = [];
@@ -242,7 +241,7 @@ function deal () {
     $('#bet-notifications').html('');
     $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
     $('#announcements').html('');
-    if(p.chips > currentBet){
+    if(p.chips >= currentBet){
         $('#double').prop('disabled', false);
     }
     showPlays();
@@ -369,7 +368,6 @@ function updateBet() {
         betID = 0;
     };
     $('#bet-amount').html(`${betAmounts[betID]}`);
-    
 }
 
 function clearBet() {
@@ -415,24 +413,22 @@ function scoreCount(player){
 
 function pCount() {
     aceChecker(p.hand);
-    // p.score = 0;
     scoreCount(p);
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
         scoreCount(p);
-        console.log('scoreCount(p) running')
         };
     if(p.score === 21 && p.hand.length === 2){
         $('#game-stats').html('you got Blackjack!');
-        animateGameStats();console.log('line 358');
+        animateGameStats();
         setTimeout(() => {
             animateAnnouncementsBox();    
         }, 1);
         setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/blackjack.png">');
         setTimeout(() => {
-            $('#hit').prop('disabled', true);console.log('line 361');
+            $('#hit').prop('disabled', true)
         }, 1);
         $('#double').prop('disabled', true);
     } else if (p.score === 21) {
@@ -503,7 +499,6 @@ function dealerAI() {
         } else if(21-d.score > 21-p.score){
             win();
         } else {
-            console.log('error. find out what happened.');
             $('#game-stats').html('an unexpected error has occurred');
             };
         setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
@@ -529,15 +524,11 @@ function clearHands() {
         discardPile.push(topDCard);
     }
     if (discardPile.length > cards.deck.length * .33){
-        // console.log('discard pile got large. creating new deck and shuffling.')
         cards = new Deck
         cards.shuffle();
         $('audio.game-sounds')[soundID.shuffle].play()
         discardPile = []
     }
-    // console.log('clearHands end. p.hand is', p.hand, 'd.hand is', d.hand);
-    // console.log('discard pile is', discardPile);
-    // console.log('deck is', cards.deck)
 };
 
 function animateGameStats() {
