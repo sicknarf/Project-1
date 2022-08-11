@@ -413,6 +413,7 @@ function pCount() {
         setTimeout(() => {
             animateAnnouncementsBox();    
         }, 1);
+        setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
         $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/blackjack.png">');
         setTimeout(() => {
             $('#hit').prop('disabled', true);console.log('line 361');
