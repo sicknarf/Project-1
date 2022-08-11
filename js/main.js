@@ -2,6 +2,7 @@ class Deck{
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
+        // const cardNums = ['ace', '2', '3', '4', '5', 'ace', 'ace', 'ace', 'ace', '10', 'jack', 'queen', 'ace'];
         const cardNums = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             cardNums.forEach((cardNum)=>{
@@ -35,22 +36,33 @@ const scoreCounter = {'aceOne': 1,
 };
 
 const p = {
-    name:'player',
-    score:0,
-    hand:[],
-    cardCounter:0,
-    cardDelay:1,
-    chips:1000,
+    name: 'player',
+    score: 0,
+    hand: [],
+    cardCounter: 0,
+    cardDelay: 1,
+    chips: 1000,
 };
 
 const d = {
-    name:'dealer',
-    score:0,
-    hiddenScore:0,
-    hand:[],
-    cardCounter:0,
-    cardDelay:0,
+    name: 'dealer',
+    score: 0,
+    hiddenScore: 0,
+    hand: [],
+    cardCounter: 0,
+    cardDelay: 0,
 };
+
+const s = {
+    name:'split',
+    score: 0,
+    hand: [],
+    cardCounter: 0,
+    cardDelay: 1,
+    chips: 0,
+    isActive: false,
+    wasInitialized: false,
+}
 
 const soundID = {
     flip: 0,
@@ -120,10 +132,10 @@ $(function(){
             $('audio.game-sounds')[soundID.bet].play()
         }, 500);
     })
-    $('#stay').click(()=>{
-        $('audio.game-sounds')[soundID.flip].play()
-        $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0"><img class="animate__animated animate__flipInY animate__slower" src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png"></li><li style="margin-left:-100px" id="dealer-1"></li>`);
-        dealerAI();})
+    $('#split').click(split);
+    $('#stay').click(stay)
+
+
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
             deal();
@@ -142,37 +154,60 @@ $(function(){
             if(p.chips >= 2000){
                 for (let i = 0; i < 8; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/4.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px">
+                                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/4.png">
+                                                    </li>`);
                     }, i*125); 
                 }
             } else if(p.chips >= 750){
                 for (let i = 0; i < 8; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/3.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px">
+                                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/3.png">
+                                                    </li>`);
                     }, i*125); 
                 }
             } else if(p.chips >= 500){
                 for (let i = 0; i < 12; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/2.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px">
+                                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/2.png">
+                                                    </li>`);
                     }, i*125); 
                 }
             } else if(p.chips >= 250){
                 for (let i = 0; i < 3; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/3.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px">
+                                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/3.png">
+                                                    </li>`);
                     }, i*125); 
                 }
             } else if(p.chips >= 100){
                 for (let i = 0; i < 7; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/2.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px">
+                                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/2.png">
+                                                    </li>`);
                     }, i*125); 
                 }
             } else if(p.chips < 100){
                 for (let i = 0; i < 7; i++){
                     setTimeout(() => {
-                        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/1.png"></li>`);
+                        $('#betting-space').append(`<li style="margin-right:-65px"><
+                                                        img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                                        src="assets/poker-chips/1.png"></li>`);
                     }, i*125); 
             }
         }
@@ -229,11 +264,14 @@ function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
     d.cardDelay = 0;
+    s.cardCounter = 0;
+    s.chips = 0
+    s.wasInitialized = false;
     $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', true);
     $('#deal-again').hide();
-    $('#player-space').html('');
+    $('#player-parent').html('<ul id="player-space"></ul>');
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
@@ -247,7 +285,11 @@ function deal () {
     showPlays();
     clearHands();
     p.hand.push(cards.deck.pop());
-    $(`#${p.name}-space`).append(`<li style="margin-left:-30px" id="${p.name}-${p.cardCounter}"><img class="animate__animated animate__fadeInDownBig animate__delay-${p.cardDelay-1}s" id="cards-${p.name}-${p.cardCounter}" src="assets/playable-cards/${p.hand[p.cardCounter].cardNum}_of_${p.hand[p.cardCounter].suit}.png"></li>`);
+    $(`#${p.name}-space`).append(`<li style="margin-left:-30px" id="${p.name}-${p.cardCounter}">
+                                        <img class="animate__animated animate__fadeInDownBig animate__delay-${p.cardDelay-1}s" 
+                                        id="cards-${p.name}-${p.cardCounter}" 
+                                        src="assets/playable-cards/${p.hand[p.cardCounter].cardNum}_of_${p.hand[p.cardCounter].suit}.png">
+                                  </li>`);
     p.cardCounter++;
     d.hand.push(cards.deck.pop());
     cardPop(p);
@@ -263,7 +305,15 @@ function deal () {
     $('#hit').prop('disabled', false);
     $('#stay').prop('disabled', false);
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0)')
-    $('#dealer-space').html(`<li style="margin-left:-30px" id="dealer-0"><img class="animate__animated animate__fadeInDownBig" src="assets/cardback.jpeg""></li><li style="margin-left:-100px" id="${d.name}-${d.cardCounter}"><img style="filter:drop-shadow(-4px 4px 6px #333)" class="animate__animated animate__fadeInDownBig" src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png"></li>`);
+    $('#dealer-space').html(`<li style="margin-left:-30px" id="dealer-0">
+                                    <img class="animate__animated animate__fadeInDownBig" 
+                                    src="assets/cardback.jpeg"">
+                             </li>
+                             <li style="margin-left:-100px" id="${d.name}-${d.cardCounter}">
+                                    <img style="filter:drop-shadow(-4px 4px 6px #333)" 
+                                    class="animate__animated animate__fadeInDownBig" 
+                                    src="assets/playable-cards/${d.hand[d.cardCounter].cardNum}_of_${d.hand[d.cardCounter].suit}.png">
+                             </li>`);
 };
 
 function modifyBet(direction) {
@@ -340,7 +390,11 @@ function modifyBet(direction) {
 
 function updateBet() {
     if(p.chips > 0){
-        $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/${betID}.png"></li>`);
+        $('#betting-space').append(`<li style="margin-right:-65px">
+                                        <img style="filter: drop-shadow(4px 4px 3px #333)" 
+                                        class="animate__animated animate__fadeInBottomRight poker-chip" 
+                                        src="assets/poker-chips/${betID}.png">
+                                    </li>`);
         $('audio.game-sounds')[soundID.bet].play()
     }
     if(p.chips-betAmounts[betID] >= 0){
@@ -384,7 +438,7 @@ function clearBet() {
 
 function betDisplay() {
     $('#chips-left').html(p.chips);
-    $('#bet-pool').html(currentBet);
+    $('#bet-pool').html(currentBet + s.chips);
 }
 
 function hidePlays() {
@@ -414,6 +468,9 @@ function scoreCount(player){
 function pCount() {
     aceChecker(p.hand);
     scoreCount(p);
+    // if(p.hand[0].cardNum === p.hand[1].cardNum && currentBet <= p.chips && s.wasInitialized === false){
+    //     $('#split').show();
+    // }
     if(p.score > 21 && aceCheck === true){
         let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
@@ -448,16 +505,40 @@ function pCount() {
 function hit() {
     $('#double').prop('disabled', true);
     $('audio.game-sounds')[soundID.flip].play()
-    cardPop(p);
-    p.cardCounter++;
-    pCount();
+    $('#split').hide();
+    if(s.isActive === false){
+        cardPop(p);
+        p.cardCounter++;
+        pCount();
+    } if(s.isActive === true){
+        cardPop(s);
+        s.cardCounter++;
+    }
 };
+
+function stay(){
+    $('audio.game-sounds')[soundID.flip].play();
+    $('#split').hide();
+    $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0">
+                                <img class="animate__animated animate__flipInY animate__slower" 
+                                src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png">
+                             </li>
+                             <li style="margin-left:-100px" id="dealer-1"></li>`);
+    dealerAI();
+}
 
 function cardPop(player) {
     $('audio.game-sounds')[soundID.flip].play()
     player.hand.push(cards.deck.pop());
-    $(`#${player.name}-space`).append(`<li style="margin-left:-100px" id="${player.name}-${player.cardCounter}"><img style="filter: drop-shadow(-4px 4px 3px #333)" class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" id="cards-${player.name}-${player.cardCounter}" src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png"></li>`);
+    $(`#${player.name}-space`).append(`<li style="margin-left:-100px" id="${player.name}-${player.cardCounter}">
+                                            <img style="filter: drop-shadow(-4px 4px 3px #333)" 
+                                            class="animate__animated animate__fadeInDownBig animate__delay-${player.cardDelay-1}s" 
+                                            id="cards-${player.name}-${player.cardCounter}" 
+                                            src="assets/playable-cards/${player.hand[player.cardCounter].cardNum}_of_${player.hand[player.cardCounter].suit}.png">
+                                        </li>`);
 };
+
+
 
 function dealerAI() {
     scoreCount(d);
@@ -470,7 +551,7 @@ function dealerAI() {
         aceCard.cardNum = 'aceOne';
         dealerAI();
     }
-    if (d.score >= 17){
+    else if (d.score >= 17){
         $('#dealer-1').html(`<img style="filter: drop-shadow(-4px 4px 3px #333)" src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
         if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
             $('#game-stats').html('both players got Blackjack!');
@@ -491,7 +572,7 @@ function dealerAI() {
         } else if (d.score > 21){
             animateGameStats();
             $('#game-stats').html('dealer bust!');
-            win()
+            win();
         } else if (21-d.score === 21-p.score){
             push()
         } else if(21-d.score < 21-p.score){
@@ -503,7 +584,7 @@ function dealerAI() {
             };
         setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
     }
-    if (d.score < 17) {
+    else if (d.score < 17) {
         d.cardCounter++;
         d.cardDelay++;
         cardPop(d);
@@ -515,6 +596,7 @@ function dealerAI() {
 function clearHands() {
     let pHandLength = p.hand.length
     let dHandLength = d.hand.length
+    let sHandLength = s.hand.length
     for(let i = 0; i < pHandLength; i++){
         let topPCard = p.hand.pop(i);
         discardPile.push(topPCard);
@@ -522,6 +604,10 @@ function clearHands() {
     for(let j = 0; j < dHandLength; j++){
         let topDCard = d.hand.pop(j);
         discardPile.push(topDCard);
+    }
+    for(let k = 0; k < sHandLength; k++){
+        let topSCard = s.hand.pop(k);
+        discardPile.push(topSCard);
     }
     if (discardPile.length > cards.deck.length * .33){
         cards = new Deck
@@ -593,3 +679,23 @@ function win() {
     setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutBottomRight')}, 2000);
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
+
+function split() {
+    s.wasInitialized = true;
+    s.chips = s.chips + currentBet
+    p.chips = p.chips - currentBet;
+    p.cardCounter--;
+    $('#split').hide();
+    betDisplay();
+    $('#player-1').remove();
+    s.hand.push(p.hand.pop());
+    $(`<ul id="split-space"></ul>`).appendTo('#player-parent');
+    $(`#split-space`).append(`<li style="margin-left:-10px" id="split-0">
+                                <img 
+                                style="filter: drop-shadow(-4px 4px 3px #333)" 
+                                class="animate__animated animate__fadeInDownBig animate__delay-${s.cardDelay-1}s" 
+                                id="cards-${s.name}-${s.cardCounter}" 
+                                src="assets/playable-cards/${s.hand[0].cardNum}_of_${s.hand[0].suit}.png">
+                              </li>`);
+}
+// $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/4.png"></li>`);

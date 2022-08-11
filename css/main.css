@@ -84,7 +84,7 @@ button {
     width:130px;
     margin-bottom: 20px;
 }
-#player-space img {
+#player-parent img {
     width:130px;
     margin-top: 20px;
 }
@@ -174,4 +174,8 @@ ul {
     position: absolute;
     right: 5px;
     bottom: 5px;
+}
+
+#split {
+    display: none;
 }
