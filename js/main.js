@@ -269,6 +269,7 @@ function deal () {
     d.cardDelay = 0;
     s.cardCounter = 1;
     s.chips = 0;
+    s.isActive = false;
     s.wasInitialized = false;
     $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
@@ -514,7 +515,7 @@ function hit() {
         cardPop(p);
         p.cardCounter++;
         playerAI(p)
-    } if(s.isActive === true){
+    } else if(s.isActive === true){
         cardPop(s);
         s.cardCounter++;
         playerAI(s)
