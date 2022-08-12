@@ -810,7 +810,7 @@ function split() {
 }
 
 function volume() {
-    $('audio#bg-player').prop('volume', 0.15);
+    $('audio#bg-player').prop('volume', 0.08);
     $('audio#bg-player')[0].play();
     $('audio#flip-sound').prop('volume', 0.4);
     $('audio#bet-sound').prop('volume', 0.2);
