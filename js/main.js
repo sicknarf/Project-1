@@ -2,7 +2,6 @@ class Deck{
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
-        // const cardNums = ['ace', '2', '3', '4', '5', 'ace', 'ace', 'ace', 'ace', '10', 'jack', 'queen', 'ace'];
         const cardNums = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
         suits.forEach((suit)=>{
             cardNums.forEach((cardNum)=>{
@@ -57,7 +56,7 @@ const s = {
     name:'split',
     score: 0,
     hand: [],
-    cardCounter: 0,
+    cardCounter: 1,
     cardDelay: 1,
     chips: 0,
     isActive: false,
@@ -84,10 +83,8 @@ let aceCheck = false;
 let currentBet = 0;
 let easterEgg = 0;
 
-
-
 $(function(){ 
-    $('audio#bg-player').prop('volume', 0.2);
+    $('audio#bg-player').prop('volume', 0.15);
     $('audio#flip-sound').prop('volume', 0.4);
     $('audio#bet-sound').prop('volume', 0.2);
     $('audio#shuffle-sound').prop('volume', 0.5);
@@ -106,8 +103,9 @@ $(function(){
         $('audio#deal-sound').prop('volume', 0);
         $('audio#easter-egg-sound').prop('volume', 0.01);
     });
+
     $('#menu-bgm-play').click(()=>{
-        $('audio#bg-player').prop('volume', 0.2);
+        $('audio#bg-player').prop('volume', 0.15);
         $('audio#flip-sound').prop('volume', 0.4);
         $('audio#bet-sound').prop('volume', 0.2);
         $('audio#shuffle-sound').prop('volume', 0.5);
@@ -116,6 +114,7 @@ $(function(){
         $('audio#deal-sound').prop('volume', 0.3);
         $('audio#easter-egg-sound').prop('volume', 0.2);
     });
+
     $('#initialize').click(init);
     $('#reset-game').click(init);
     $('#broke').click(init);
@@ -132,9 +131,9 @@ $(function(){
             $('audio.game-sounds')[soundID.bet].play()
         }, 500);
     })
+
     $('#split').click(split);
     $('#stay').click(stay)
-
 
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
@@ -144,6 +143,7 @@ $(function(){
             $('#bet-notifications').html('you have to bet more than that');
         }
     });
+
     $('#bet-down').click(()=>{modifyBet(-1)});
     $('#bet-up').click(()=>{modifyBet(1)});
     $('#betting-time').click(updateBet);
@@ -215,6 +215,7 @@ $(function(){
         betDisplay();
         }
     })
+
     $('#clear-bet').click(clearBet);
     $('#deal').click(()=>{
         if(currentBet > 0){
@@ -240,6 +241,8 @@ function init(){
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
     $('#announcements-box').css('background-color', '');
+    $('#player-parent').html('<ul id="player-space"></ul>');
+    $('#split').hide();
     hidePlays();
     clearBet();
     p.score = 0;
@@ -264,8 +267,8 @@ function deal () {
     p.cardCounter = 0;
     d.cardCounter = 0;
     d.cardDelay = 0;
-    s.cardCounter = 0;
-    s.chips = 0
+    s.cardCounter = 1;
+    s.chips = 0;
     s.wasInitialized = false;
     $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
@@ -296,7 +299,7 @@ function deal () {
     p.cardCounter++;
     cardPop(d);
     d.cardCounter++;
-    pCount();
+    playerAI(p)
     d.hiddenScore = 0;
     for(let i = 1; i < d.hand.length; i++){
         d.hiddenScore = d.hiddenScore + parseInt(scoreCounter[d.hand[i].cardNum]);
@@ -465,20 +468,19 @@ function scoreCount(player){
     }
 };
 
-function pCount() {
-    aceChecker(p.hand);
-    scoreCount(p);
-    // if(p.hand[0].cardNum === p.hand[1].cardNum && currentBet <= p.chips && s.wasInitialized === false){
-    //     $('#split').show();
-    // }
-    if(p.score > 21 && aceCheck === true){
-        let aceCard = p.hand.find(hand => hand.cardNum === 'ace');
+function playerAI(player){
+    aceChecker(player.hand);
+    scoreCount(player);
+    if(player.hand[0].cardNum === player.hand[1].cardNum && currentBet <= player.chips && s.wasInitialized === false){
+        $('#split').show();
+    }
+    if(player.score > 21 && aceCheck === true){
+        let aceCard = player.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
-        scoreCount(p);
+        scoreCount(player);
         };
-    if(p.score === 21 && p.hand.length === 2){
-        $('#game-stats').html('you got Blackjack!');
-        animateGameStats();
+    if(player.score === 21 && player.hand.length === 2){
+        animateGameStats('you got Blackjack!');
         setTimeout(() => {
             animateAnnouncementsBox();    
         }, 1);
@@ -488,18 +490,20 @@ function pCount() {
             $('#hit').prop('disabled', true)
         }, 1);
         $('#double').prop('disabled', true);
-    } else if (p.score === 21) {
-        $('#game-stats').html('you got 21!');
-        animateGameStats();
+    } else if (player.score === 21) {
+        animateGameStats('you got 21!')
         $('#hit').prop('disabled', true);
-    } else if (p.score > 21){
-        $('#hit').prop('disabled', true);
-        $('#stay').prop('disabled', true);
-        $('#game-stats').html('BUST');
-        animateGameStats();
-        lose();
+    } else if (player.score > 21){
+        animateGameStats('BUST');
+        if (s.wasInitialized === false){
+            $('#hit').prop('disabled', true);
+            $('#stay').prop('disabled', true);
+            lose();
+        } else if (s.wasInitialized === true){
+            stay();
+        }
     }
-    setTimeout(()=>{$('#player-hand-count').html(p.score)}, '400');
+    setTimeout(()=>{$('#player-hand-count').html(player.score)}, '400');
 };
 
 function hit() {
@@ -509,22 +513,33 @@ function hit() {
     if(s.isActive === false){
         cardPop(p);
         p.cardCounter++;
-        pCount();
+        playerAI(p)
     } if(s.isActive === true){
         cardPop(s);
         s.cardCounter++;
+        playerAI(s)
     }
 };
 
 function stay(){
-    $('audio.game-sounds')[soundID.flip].play();
-    $('#split').hide();
-    $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0">
-                                <img class="animate__animated animate__flipInY animate__slower" 
-                                src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png">
-                             </li>
-                             <li style="margin-left:-100px" id="dealer-1"></li>`);
-    dealerAI();
+    if (s.wasInitialized === true && s.isActive === false){
+        s.isActive = true;
+        setTimeout(() => {
+            $('#hit').prop('disabled', false)
+        }, 1);
+        $('#double').prop('disabled', false);
+        hit();
+    } else {
+        s.isActive = false;
+        $('audio.game-sounds')[soundID.flip].play();
+        $('#split').hide();
+        $('#dealer-space').html(`<li style="z-index:-1 margin-left:-100px" id="dealer-0">
+                                    <img class="animate__animated animate__flipInY animate__slower" 
+                                    src="assets/playable-cards/${d.hand[0].cardNum}_of_${d.hand[0].suit}.png">
+                                 </li>
+                                 <li style="margin-left:-100px" id="dealer-1"></li>`);
+        dealerAI();
+    }
 }
 
 function cardPop(player) {
@@ -538,60 +553,174 @@ function cardPop(player) {
                                         </li>`);
 };
 
-
-
 function dealerAI() {
     scoreCount(d);
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#hit, #stay').prop('disabled', true);
     aceChecker(d.hand);
-    if (d.score > 21 && aceCheck === true){
-        let aceCard = d.hand.find(hand => hand.cardNum === 'ace');
-        aceCard.cardNum = 'aceOne';
-        dealerAI();
-    }
-    else if (d.score >= 17){
-        $('#dealer-1').html(`<img style="filter: drop-shadow(-4px 4px 3px #333)" src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
-        if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
-            $('#game-stats').html('both players got Blackjack!');
-            animateGameStats();
-            push();
-        } else if(d.score === 21 && d.hand.length === 2){
-            $('#game-stats').html('the dealer got Blackjack, you did not');
-            animateGameStats();
-            lose();
-        } else if (p.score === 21 && d.score === 21 && p.hand.length === 2) {
-            $('#game-stats').html('you got Blackjack, the dealer did not');
-            animateGameStats();
-            win();
-        } else if(d.score === 21 && p.score === 21) {
-            push()
-            $('#deal-again').show();
-            $('#deal').prop('disabled', false);
-        } else if (d.score > 21){
-            animateGameStats();
-            $('#game-stats').html('dealer bust!');
-            win();
-        } else if (21-d.score === 21-p.score){
-            push()
-        } else if(21-d.score < 21-p.score){
-            lose();
-        } else if(21-d.score > 21-p.score){
-            win();
-        } else {
-            $('#game-stats').html('an unexpected error has occurred');
-            };
-        setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
-    }
-    else if (d.score < 17) {
-        d.cardCounter++;
-        d.cardDelay++;
-        cardPop(d);
-        scoreCount(d);
-        dealerAI();
+    if (s.wasInitialized === false){
+        if (d.score > 21 && aceCheck === true){
+            let aceCard = d.hand.find(hand => hand.cardNum === 'ace');
+            aceCard.cardNum = 'aceOne';
+            dealerAI();
         }
-};
+        else if (d.score >= 17){
+            $('#dealer-1').html(`<img style="filter: drop-shadow(-4px 4px 3px #333)" src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
+            if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
+                animateGameStats('both players got Blackjack!');
+                push();
+            } else if(d.score === 21 && d.hand.length === 2){
+                animateGameStats('the dealer got Blackjack, you did not');
+                lose();
+            } else if (p.score === 21 && d.score === 21 && p.hand.length === 2) {
+                animateGameStats('you got Blackjack, the dealer did not');
+                win();
+            } else if(d.score === 21 && p.score === 21) {
+                push()
+                $('#deal-again').show();
+                $('#deal').prop('disabled', false);
+            } else if (d.score > 21){
+                animateGameStats('dealer bust!');
+                win();
+            } else if (21-d.score === 21-p.score){
+                push()
+            } else if(21-d.score < 21-p.score){
+                lose();
+            } else if(21-d.score > 21-p.score){
+                win();
+            } else {
+                $('#game-stats').html('an unexpected error has occurred');
+                };
+            setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
+        }
+        else if (d.score < 17) {
+            d.cardCounter++;
+            d.cardDelay++;
+            cardPop(d);
+            scoreCount(d);
+            dealerAI();
+        }
+    } else if (s.wasInitialized === true) { // THIS IS WHERE SPLIT CONDITIONS ARE *******************************
+        if (p.score > 21){
+            p.score = 0
+        }
+        if (s.score > 21){
+            s.score = 0
+        }
+        if (d.score > 21 && aceCheck === true){
+            let aceCard = d.hand.find(hand => hand.cardNum === 'ace');
+            aceCard.cardNum = 'aceOne';
+            dealerAI();
+        } else if (d.score >= 17){
+            $('#dealer-1').html(`<img style="filter: drop-shadow(-4px 4px 3px #333)" src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
+            if(d.score + p.score + s.score === 63 && d.hand.length + p.hand.length + s.hand.length === 6){
+                animateGameStats('triple Blackjack!');
+                push(); 
+            } else if (d.score === 21 && d.hand.length === 2 && p.score + s.score === 42 && p.hand.length === 2 && s.hand.length > 2) {
+                animateGameStats('main hand got Blackjack, split hand did not');
+                partialLoss();
+                p.chips = p.chips + currentBet;
+                currentBet = 0;
+                setTimeout((betDisplay), '2500');
+            } else if (d.score === 21 && d.hand.length === 2 && p.score + s.score === 42 && s.hand.length === 2 && p.hand.length > 2) {
+                animateGameStats('split hand got Blackjack, main hand did not');
+                partialLoss();
+                p.chips = p.chips + s.chips;
+                currentBet = 0;
+                setTimeout((betDisplay), '2500');
+            } else if(d.score === 21 && d.hand.length === 2){ 
+                animateGameStats('the dealer got Blackjack, you did not');
+                lose();
+            } else if (d.score === 21 && d.hand.length > 2) {
+                if (p.score + s.score === 42 && p.hand.length + s.hand.length === 4){
+                    $('#game-state').html('you got double Blackjack, dealer did not');
+                    animateGameStats();
+                    win();
+                } else if (p.score + s.score === 42 && p.hand.length === 2 && s.hand.length > 2) {
+                    animateGameStats('main hand got Blackjack, split did not');
+                    partialWin();
+                    p.chips = p.chips + (currentBet*2) + s.chips;
+                    setTimeout((betDisplay), '2500');
+                } else if (p.score + s.score === 42 && s.hand.length === 2 && p.hand.length > 2) {
+                    animateGameStats('split hand got Blackjack, main did not'); 
+                    partialWin();
+                    p.chips = p.chips + currentBet + (s.chips * 2);
+                    currentBet = 0;
+                    setTimeout((betDisplay), '2500');
+                } else if (p.score + s.score === 42 && p.hand.length > 2 && s.hand.length > 2){
+                    animateGameStats('three way tie');
+                    push();
+                } else if (p.score === 21 && s.score !== 21) {
+                    animateGameStats('main hand won, split hand lost');
+                    push();
+                } else if (s.score === 21 && p.score !== 21) {
+                    animateGameStats('main hand lost, split hand won');
+                    push();
+                }
+            } else if (d.score > 21){
+                animateGameStats('dealer bust!');
+                if (p.score === 0) {
+                    animateGameStats('main hand won!');
+                    push();
+                } else if (s.score === 0) {
+                    animateGameStats('split hand won!');
+                    push();
+                }
+            } else if (d.score <21){
+                if (p.score > d.score && s.score > d.score){
+                    animateGameStats('both hands win!');
+                    win();
+                } else if (p.score > d.score && s.score === d.score) {
+                    animateGameStats('main hand won, split hand tied');
+                    partialWin();
+                    p.chips = p.chips + (currentBet*2) + s.chips;
+                    currentBet = 0;
+                    setTimeout((betDisplay), '2500');
+                } else if (s.score > d.score && p.score === d.score) {
+                    animateGameStats('split hand won, main hand tied');
+                    partialWin();
+                    p.chips = p.chips + currentBet + (s.chips * 2);
+                    currentBet = 0;
+                    setTimeout((betDisplay), '2500');
+                } else if (p.score === d.score && s.score === d.score){
+                    animateGameStats('three way tie');
+                    push();
+                } else if (p.score === d.score && s.score < d.score){
+                    animateGameStats('main hand tied, split hand lost');
+                    partialLoss();
+                    p.chips = p.chips + currentBet;
+                    currentBet = 0;
+                    setTimeout((betDisplay), '2500');
+                } else if (p.score < d.score && s.score === d.score){
+                    animateGameStats('main hand lost, split hand tied');
+                    partialLoss();
+                    p.chips = p.chips + s.chips;
+                    currentBet = 0
+                    setTimeout((betDisplay), '2500');
+                } else if (p.score < d.score && s.score > d.score){
+                    animateGameStats('main hand lost, split hand won');
+                    push();
+                } else if (p.score > d.score && s.score < d.score){
+                    animateGameStats('main hand won, split hand lost')
+                    push();
+                } else if (p.score < d.score && s.score < d.score){
+                    animateGameStats('both hands lost');
+                    lose();
+                }
+            } else {
+                $('#game-stats').html('an unexpected error has occurred');
+                };
+            setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
+        } else if (d.score < 17) {
+            d.cardCounter++;
+            d.cardDelay++;
+            cardPop(d);
+            scoreCount(d);
+            dealerAI();
+        }
+    }
+}
 
 function clearHands() {
     let pHandLength = p.hand.length
@@ -617,7 +746,8 @@ function clearHands() {
     }
 };
 
-function animateGameStats() {
+function animateGameStats(statUpdate) {
+    $('#game-stats').html(statUpdate);
     $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
 }
@@ -632,8 +762,9 @@ function push() {
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
     $('#deal-again').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
-    p.chips = p.chips + currentBet;
+    p.chips = p.chips + s.chips + currentBet;
     currentBet = 0;
+    s.chips = 0;
     setTimeout((betDisplay), '1500');
     hidePlays();
     $('.poker-chip').removeClass('animate__fadeInBottomRight')
@@ -680,15 +811,48 @@ function win() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
+function partialWin() {
+    $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/partial-win">');
+    $('#deal-again').show();
+    $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
+    hidePlays();
+    $('.poker-chip').removeClass('animate__fadeInBottomRight');
+    setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
+    setTimeout(() => {$('audio.game-sounds')[soundID.bet].play()}, 2000);
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeInDownBig')}, 500);
+    setTimeout(()=>{$('#betting-space').clone().appendTo('#betting-space')}, 700);
+    setTimeout(()=>{$('.poker-chip').removeClass('animate__fadeInDownBig')}, 1500);
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutBottomRight')}, 2000);
+    setTimeout(()=>{$('#betting-space').html('')}, 2500)
+}
+
+function partialLoss() {
+    animateAnnouncementsBox();
+    $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/partial-loss.png">');
+    hidePlays()
+    $('#deal-again').show();
+    $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
+    $('.poker-chip').removeClass('animate__fadeInBottomRight');
+    setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
+    setTimeout(()=>{$('.poker-chip').addClass('animate__fadeOutUpBig')}, 2000)
+    setTimeout(()=>{$('#betting-space').html('')}, 2500)
+}
+
 function split() {
     s.wasInitialized = true;
     s.chips = s.chips + currentBet
     p.chips = p.chips - currentBet;
-    p.cardCounter--;
+    $('#betting-space').clone().appendTo('#betting-space')
     $('#split').hide();
     betDisplay();
     $('#player-1').remove();
     s.hand.push(p.hand.pop());
+    p.cardCounter--;
+    if (p.hand[0].cardNum === 'aceOne'){
+        p.hand[0].cardNum = 'ace'
+    }
+    scoreCount(p);
+    hit();
     $(`<ul id="split-space"></ul>`).appendTo('#player-parent');
     $(`#split-space`).append(`<li style="margin-left:-10px" id="split-0">
                                 <img 
@@ -698,4 +862,3 @@ function split() {
                                 src="assets/playable-cards/${s.hand[0].cardNum}_of_${s.hand[0].suit}.png">
                               </li>`);
 }
-// $('#betting-space').append(`<li style="margin-right:-65px"><img style="filter: drop-shadow(4px 4px 3px #333)" class="animate__animated animate__fadeInBottomRight poker-chip" src="assets/poker-chips/4.png"></li>`);
