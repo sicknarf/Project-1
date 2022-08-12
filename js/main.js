@@ -18,21 +18,8 @@ class Deck{
             this.deck[j] = temp;
         }}
 };
-const scoreCounter = {'aceOne': 1, 
-    '2': 2,
-    '3': 3,
-    '4': 4,
-    '5': 5,
-    '6': 6,
-    '7': 7,
-    '8': 8,
-    '9': 9,
-    '10': 10,
-    'jack': 10,
-    'queen': 10,
-    'king': 10,
-    'ace': 11
-};
+const scoreCounter = {'aceOne': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'jack': 10, 'queen': 10, 'king': 10, 'ace': 11};
+const betAmounts = [1, 5, 25, 100, 250, 500, 1000];
 
 const p = {
     name: 'player',
@@ -42,7 +29,6 @@ const p = {
     cardDelay: 1,
     chips: 1000,
 };
-
 const d = {
     name: 'dealer',
     score: 0,
@@ -51,7 +37,6 @@ const d = {
     cardCounter: 0,
     cardDelay: 0,
 };
-
 const s = {
     name:'split',
     score: 0,
@@ -73,9 +58,6 @@ const soundID = {
     cheatCode: 6,
 }
 
-const volumeID = [0.2, 0.4, 0.2, 0.5, 0.3, 0.3]
-
-const betAmounts = [1, 5, 25, 100, 250, 500, 1000];
 let betID = 3
 let cards = new Deck;
 let discardPile = [];
@@ -84,57 +66,26 @@ let currentBet = 0;
 let easterEgg = 0;
 
 $(function(){ 
-    $('audio#bg-player').prop('volume', 0.15);
-    $('audio#flip-sound').prop('volume', 0.4);
-    $('audio#bet-sound').prop('volume', 0.2);
-    $('audio#shuffle-sound').prop('volume', 0.5);
-    $('audio#all-in-sound').prop('volume', 0.3);
-    $('audio#announce-sound').prop('volume', 0.3);
-    $('audio#deal-sound').prop('volume', 0.3);
-    $('audio#easter-egg-sound').prop('volume', 0.2);
-
-    $('#menu-bgm-pause').click(()=>{
-        $('audio#bg-player').prop('volume', 0);
-        $('audio#flip-sound').prop('volume', 0);
-        $('audio#bet-sound').prop('volume', 0);
-        $('audio#shuffle-sound').prop('volume', 0);
-        $('audio#all-in-sound').prop('volume', 0);
-        $('audio#announce-sound').prop('volume', 0);
-        $('audio#deal-sound').prop('volume', 0);
-        $('audio#easter-egg-sound').prop('volume', 0.01);
-    });
-
-    $('#menu-bgm-play').click(()=>{
-        $('audio#bg-player').prop('volume', 0.15);
-        $('audio#flip-sound').prop('volume', 0.4);
-        $('audio#bet-sound').prop('volume', 0.2);
-        $('audio#shuffle-sound').prop('volume', 0.5);
-        $('audio#all-in-sound').prop('volume', 0.3);
-        $('audio#announce-sound').prop('volume', 0.3);
-        $('audio#deal-sound').prop('volume', 0.3);
-        $('audio#easter-egg-sound').prop('volume', 0.2);
-    });
-
+    $('#menu-bgm-play').click(volume);
     $('#initialize').click(init);
     $('#reset-game').click(init);
     $('#broke').click(init);
     $('#hit').click(hit); 
-    $('#double').click(()=>{
-        p.chips = p.chips - currentBet;
-        currentBet = currentBet * 2;
-        $('#hit').prop('disabled', true);
-        hit();
-        betDisplay();
-        $('#betting-space').clone().appendTo('#betting-space');
-        $('audio.game-sounds')[soundID.flip].play()
-        setTimeout(() => {
-            $('audio.game-sounds')[soundID.bet].play()
-        }, 500);
-    })
-
     $('#split').click(split);
     $('#stay').click(stay)
-
+    $('#bet-down').click(()=>{modifyBet(-1)});
+    $('#bet-up').click(()=>{modifyBet(1)});
+    $('#betting-time').click(updateBet);
+    $('#clear-bet').click(clearBet);
+    
+    $('#deal').click(()=>{
+        if(currentBet > 0){
+            deal();
+        } else if(currentBet <= 0){
+            $('#bet-notifications').css('background-color','pink');
+            $('#bet-notifications').html('you have to bet more than that');
+        }
+    })
     $('#deal-again').click(()=> { 
         if(currentBet > 0){
             deal();
@@ -143,10 +94,6 @@ $(function(){
             $('#bet-notifications').html('you have to bet more than that');
         }
     });
-
-    $('#bet-down').click(()=>{modifyBet(-1)});
-    $('#bet-up').click(()=>{modifyBet(1)});
-    $('#betting-time').click(updateBet);
     $('#all-in').click(()=>{
         if(p.chips > 0){
             $('audio.game-sounds')[soundID.allIn].play()
@@ -215,19 +162,31 @@ $(function(){
         betDisplay();
         }
     })
-
-    $('#clear-bet').click(clearBet);
-    $('#deal').click(()=>{
-        if(currentBet > 0){
-            deal();
-        } else if(currentBet <= 0){
-            $('#bet-notifications').css('background-color','pink');
-            $('#bet-notifications').html('you have to bet more than that');
-        }
+    $('#double').click(()=>{
+        p.chips = p.chips - currentBet;
+        currentBet = currentBet * 2;
+        $('#hit').prop('disabled', true);
+        hit();
+        betDisplay();
+        $('#betting-space').clone().appendTo('#betting-space');
+        $('audio.game-sounds')[soundID.flip].play()
+        setTimeout(() => {
+            $('audio.game-sounds')[soundID.bet].play()
+        }, 500);
     })
-
-
+    $('#menu-bgm-pause').click(()=>{
+        $('audio#bg-player')[0].pause()
+        $('audio#flip-sound').prop('volume', 0);
+        $('audio#bet-sound').prop('volume', 0);
+        $('audio#shuffle-sound').prop('volume', 0);
+        $('audio#all-in-sound').prop('volume', 0);
+        $('audio#announce-sound').prop('volume', 0);
+        $('audio#deal-sound').prop('volume', 0);
+        $('audio#easter-egg-sound').prop('volume', 0.01);
+    });
 });
+
+volume();
 
 function init(){
     $('audio#bg-player')[0].play()
@@ -237,9 +196,7 @@ function init(){
     $('#player-hand, #dealer-hand, #deal-again, #broke').hide();
     $('#splash').addClass('animate__animated animated__slower animate__zoomOut');
     $('#dealer-space, #player-space').html('');
-    $('#game-stats').html('');
-    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
-    $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    clearAnnouncements();
     $('#announcements-box').css('background-color', '');
     $('#player-parent').html('<ul id="player-space"></ul>');
     $('#split').hide();
@@ -250,12 +207,9 @@ function init(){
     p.hand = [];
     d.hand = [];
     p.chips = 1000;
-    p.cardCounter = 0;
-    d.cardCounter = 0;
-    d.cardDelay = 0;
+    resetCounters();
     betID = 3;
     currentBet = 0
-    $('#announcements').html('');
     cards = new Deck;
     cards.shuffle();
     $('audio.game-sounds')[soundID.shuffle].play()
@@ -264,25 +218,16 @@ function init(){
 }
 
 function deal () {
-    p.cardCounter = 0;
-    d.cardCounter = 0;
-    d.cardDelay = 0;
-    s.cardCounter = 1;
-    s.chips = 0;
-    s.isActive = false;
-    s.wasInitialized = false;
+    resetCounters();
     $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', true);
     $('#deal-again').hide();
     $('#player-parent').html('<ul id="player-space"></ul>');
-    $('#game-stats').html('');
-    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
-    $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    clearAnnouncements();
     $('#game-stats').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-3s animate__delay-2s');
     $('#bet-notifications').html('');
     $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
-    $('#announcements').html('');
     if(p.chips >= currentBet){
         $('#double').prop('disabled', false);
     }
@@ -602,7 +547,7 @@ function dealerAI() {
             scoreCount(d);
             dealerAI();
         }
-    } else if (s.wasInitialized === true) { // THIS IS WHERE SPLIT CONDITIONS ARE *******************************
+    } else if (s.wasInitialized === true) {
         if (p.score > 21){
             p.score = 0
         }
@@ -862,4 +807,34 @@ function split() {
                                 id="cards-${s.name}-${s.cardCounter}" 
                                 src="assets/playable-cards/${s.hand[0].cardNum}_of_${s.hand[0].suit}.png">
                               </li>`);
+}
+
+function volume() {
+    $('audio#bg-player').prop('volume', 0.15);
+    $('audio#bg-player')[0].play();
+    $('audio#flip-sound').prop('volume', 0.4);
+    $('audio#bet-sound').prop('volume', 0.2);
+    $('audio#shuffle-sound').prop('volume', 0.5);
+    $('audio#all-in-sound').prop('volume', 0.3);
+    $('audio#announce-sound').prop('volume', 0.3);
+    $('audio#deal-sound').prop('volume', 0.3);
+    $('audio#easter-egg-sound').prop('volume', 0.2);
+}
+
+function clearAnnouncements() {
+    $('#game-stats').html('');
+    $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
+    $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
+    $('#announcements').html('');
+}
+
+function resetCounters() {
+    p.cardCounter = 0;
+    d.cardCounter = 0;
+    s.cardCounter = 1;
+    d.cardDelay = 0;
+    s.chips = 0;
+    s.isActive = false;
+    s.wasInitialized = false;
+    $('#double').prop('disabled', true);
 }
