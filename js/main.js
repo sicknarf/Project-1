@@ -187,6 +187,7 @@ $(function(){
 });
 
 volume();
+$('audio#bg-player')[0].pause();
 
 function init(){
     $('audio#bg-player')[0].play()
@@ -811,7 +812,7 @@ function split() {
 
 function volume() {
     $('audio#bg-player').prop('volume', 0.08);
-    $('audio#bg-player')[0].play();
+    $('audio#bg-player')[0].play()
     $('audio#flip-sound').prop('volume', 0.4);
     $('audio#bet-sound').prop('volume', 0.2);
     $('audio#shuffle-sound').prop('volume', 0.5);
