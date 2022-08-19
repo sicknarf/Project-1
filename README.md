@@ -44,7 +44,7 @@ The biggest hurdle for me was figuring out how to calculate aces, since they cou
 
 ### Future Features
 
-Multi-deck blackjack, a number of other NPCs, and choosing your position at the table to change your own odds. Distant future may also include other non-NPC players. Double functionality on splits.
+Multi-deck blackjack, a number of other NPCs, and choosing your position at the table to change your own odds. Distant future may also include other non-NPC players. Double functionality on splits. And user input on adjusting house rules, such as hit on soft 17, increased winnings on Blackjack, etc.
 
 ### Other Resources Used
 
