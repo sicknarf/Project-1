@@ -1,4 +1,4 @@
-class Deck{
+class Deck{ // basic class setup for the deck, including a shuffle using Fisher-Yates algo
     constructor(){
         this.deck = [];
         const suits = ['spades', 'clubs', 'hearts', 'diamonds'];
@@ -18,26 +18,28 @@ class Deck{
             this.deck[j] = temp;
         }}
 };
+// to translate the card values to countable scores
 const scoreCounter = {'aceOne': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'jack': 10, 'queen': 10, 'king': 10, 'ace': 11};
+// the increments at which the player can bet
 const betAmounts = [1, 5, 25, 100, 250, 500, 1000];
 
-const p = {
+const p = { // values for the player
     name: 'player',
     score: 0,
     hand: [],
-    cardCounter: 0,
-    cardDelay: 1,
+    cardCounter: 0, 
+    cardDelay: 1, // time delay set for animations
     chips: 1000,
 };
-const d = {
+const d = { // values for the dealer
     name: 'dealer',
     score: 0,
-    hiddenScore: 0,
+    hiddenScore: 0, // the score on the single visible card before the flip
     hand: [],
     cardCounter: 0,
-    cardDelay: 0,
+    cardDelay: 0, // time delay set for animations
 };
-const s = {
+const s = { // basic structure for the split hand
     name:'split',
     score: 0,
     hand: [],
@@ -58,14 +60,14 @@ const soundID = {
     cheatCode: 6,
 }
 
-let betID = 3
+let betID = 3 // to choose the increment in the betAmounts array
 let cards = new Deck;
 let discardPile = [];
 let aceCheck = false;
 let currentBet = 0;
 let easterEgg = 0;
 
-$(function(){ 
+$(function(){ // basic jQuery for click inputs here
     $('#menu-bgm-play').click(volume);
     $('#initialize').click(init);
     $('#reset-game').click(init);
@@ -78,7 +80,7 @@ $(function(){
     $('#betting-time').click(updateBet);
     $('#clear-bet').click(clearBet);
     
-    $('#deal').click(()=>{
+    $('#deal, #deal-again').click(()=>{ // will not let you deal if you have 0 as your bet
         if(currentBet > 0){
             deal();
         } else if(currentBet <= 0){
@@ -86,18 +88,12 @@ $(function(){
             $('#bet-notifications').html('you have to bet more than that');
         }
     })
-    $('#deal-again').click(()=> { 
-        if(currentBet > 0){
-            deal();
-        } else if(currentBet <= 0){
-            $('#bet-notifications').css('background-color','pink');
-            $('#bet-notifications').html('you have to bet more than that');
-        }
-    });
+
     $('#all-in').click(()=>{
         if(p.chips > 0){
             $('audio.game-sounds')[soundID.allIn].play()
             currentBet = currentBet + p.chips;
+            // different chip amounts in the player's pot result in different animations
             if(p.chips >= 2000){
                 for (let i = 0; i < 8; i++){
                     setTimeout(() => {
@@ -186,8 +182,9 @@ $(function(){
     });
 });
 
+// establish volume but also pauses the music. Locally the music doesn't autoplay, but hosted, for some reason it does.
 volume();
-$('audio#bg-player')[0].pause();
+$('audio#bg-player')[0].pause(); 
 
 function init(){
     $('audio#bg-player')[0].play()
@@ -218,7 +215,7 @@ function init(){
     $('#bet-amount').html(`${betAmounts[betID]}`);
 }
 
-function deal () {
+function deal () { // deal functionality that resets the board and hands.
     resetCounters();
     $('audio.game-sounds')[soundID.deal].play();
     $('#player-hand, #dealer-hand').show();
@@ -234,6 +231,7 @@ function deal () {
     }
     showPlays();
     clearHands();
+    // manually pushing cards to player hands instead of using function for proper animations
     p.hand.push(cards.deck.pop());
     $(`#${p.name}-space`).append(`<li style="margin-left:-30px" id="${p.name}-${p.cardCounter}">
                                         <img class="animate__animated animate__fadeInDownBig animate__delay-${p.cardDelay-1}s" 
@@ -266,7 +264,7 @@ function deal () {
                              </li>`);
 };
 
-function modifyBet(direction) {
+function modifyBet(direction) { // this is the function that defines how to modify your bet
     if (p.chips >= 1000){
         if(betID > 0 && betID < 6){
             betID = betID + direction;
@@ -338,7 +336,7 @@ function modifyBet(direction) {
     }
 }
 
-function updateBet() {
+function updateBet() { // this is the function that confirms the bet
     if(p.chips > 0){
         $('#betting-space').append(`<li style="margin-right:-65px">
                                         <img style="filter: drop-shadow(4px 4px 3px #333)" 
@@ -374,7 +372,7 @@ function updateBet() {
     $('#bet-amount').html(`${betAmounts[betID]}`);
 }
 
-function clearBet() {
+function clearBet() { // returns all chips back to the player's pot if a round is not being played
     p.chips = p.chips + currentBet;
     currentBet = currentBet - currentBet;
     $('#chips-left').html(p.chips);
@@ -386,28 +384,28 @@ function clearBet() {
     setTimeout(()=>{$('#betting-space').html('')}, 500)
 }
 
-function betDisplay() {
+function betDisplay() { // updates elements to show the player how much they are betting
     $('#chips-left').html(p.chips);
     $('#bet-pool').html(currentBet + s.chips);
 }
 
-function hidePlays() {
+function hidePlays() { // hides interaction buttons when they are not usable
     setTimeout(()=>{$('#hit, #stay, #double').hide()}, '800')
     $('#hit, #stay, #double').addClass('animate__animated animate__fadeOut');
 }
 
-function showPlays() {
+function showPlays() { // shows interaction buttons
     $('#hit, #stay, #double').removeClass('animate__fadeOut');
     $('#hit, #stay, #double').show();
 }
 
-function aceChecker(hand){
+function aceChecker(hand){ // confirms whether or not an ace is in the hand for the scoreCounter array
     aceCheck = hand.some((ace) => {
         return ace.cardNum === 'ace';
     })
 };
 
-function scoreCount(player){
+function scoreCount(player){ // resets the points the player has and then reads through the hand to count them
     player.score = 0
     let handLength = player.hand.length
     for(let i = 0; i < handLength; i++){
@@ -415,20 +413,24 @@ function scoreCount(player){
     }
 };
 
-function playerAI(player){
+function playerAI(player){ // the main function to initiate the game
     aceChecker(player.hand);
     scoreCount(player);
     if(player.hand[0].cardNum === player.hand[1].cardNum && currentBet <= player.chips && s.wasInitialized === false){
-        $('#split').show();
+        $('#split').show(); 
     }
-    if(player.score > 21 && aceCheck === true){
+    if(player.score > 21 && aceCheck === true){ 
+        // prevents a bust with an ace in hand then appropriately modifies the score. 
+        // incredibly lucky players with 3+ aces are accounted for.
         let aceCard = player.hand.find(hand => hand.cardNum === 'ace');
         aceCard.cardNum = 'aceOne';
         scoreCount(player);
         };
     if(player.score === 21 && player.hand.length === 2){
+        // getting a blackjack immediately prevents the player from betting again
+        // while it is against a player's best interests, I will eventually add functionality to double down
         animateGameStats('you got Blackjack!');
-        setTimeout(() => {
+        setTimeout(() => { // setTimeout introduced here because otherwise there are animation issues
             animateAnnouncementsBox();    
         }, 1);
         setTimeout(() => {$('audio.game-sounds')[soundID.announcement].play()}, 1100);
@@ -453,7 +455,7 @@ function playerAI(player){
     setTimeout(()=>{$('#player-hand-count').html(player.score)}, '400');
 };
 
-function hit() {
+function hit() { // basic hit functionality
     $('#double').prop('disabled', true);
     $('audio.game-sounds')[soundID.flip].play()
     $('#split').hide();
@@ -468,7 +470,7 @@ function hit() {
     }
 };
 
-function stay(){
+function stay(){ // basic stay functionality
     if (s.wasInitialized === true && s.isActive === false){
         s.isActive = true;
         setTimeout(() => {
@@ -489,7 +491,7 @@ function stay(){
     }
 }
 
-function cardPop(player) {
+function cardPop(player) { // removes the top card from the deck array, and pushes it to the specific player's hand.
     $('audio.game-sounds')[soundID.flip].play()
     player.hand.push(cards.deck.pop());
     $(`#${player.name}-space`).append(`<li style="margin-left:-100px" id="${player.name}-${player.cardCounter}">
@@ -506,13 +508,13 @@ function dealerAI() {
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#hit, #stay').prop('disabled', true);
     aceChecker(d.hand);
-    if (s.wasInitialized === false){
+    if (s.wasInitialized === false){ // checks to make sure there was no split
         if (d.score > 21 && aceCheck === true){
             let aceCard = d.hand.find(hand => hand.cardNum === 'ace');
             aceCard.cardNum = 'aceOne';
             dealerAI();
         }
-        else if (d.score >= 17){
+        else if (d.score >= 17){  // checks if dealer is over 16 and defines win conditions
             $('#dealer-1').html(`<img style="filter: drop-shadow(-4px 4px 3px #333)" src="assets/playable-cards/${d.hand[1].cardNum}_of_${d.hand[1].suit}.png">`);
             if(d.score === 21 && d.hand.length === 2 && p.score === 21 && p.hand.length === 2){
                 animateGameStats('both players got Blackjack!');
@@ -541,14 +543,14 @@ function dealerAI() {
                 };
             setTimeout(()=>{$('#dealer-hand-count').html(d.score)}, '1000');
         }
-        else if (d.score < 17) {
+        else if (d.score < 17) { // dealer must draw their next card
             d.cardCounter++;
             d.cardDelay++;
             cardPop(d);
             scoreCount(d);
             dealerAI();
         }
-    } else if (s.wasInitialized === true) {
+    } else if (s.wasInitialized === true) { // BETA: SPLIT FUNCTIONALITY
         if (p.score > 21){
             p.score = 0
         }
@@ -669,7 +671,7 @@ function dealerAI() {
     }
 }
 
-function clearHands() {
+function clearHands() { // discards hands to a discard pile. Once discard pile is 33% of the deck length, the deck is shuffled.
     let pHandLength = p.hand.length
     let dHandLength = d.hand.length
     let sHandLength = s.hand.length
@@ -693,18 +695,18 @@ function clearHands() {
     }
 };
 
-function animateGameStats(statUpdate) {
+function animateGameStats(statUpdate) { // basic animations
     $('#game-stats').html(statUpdate);
     $('#game-stats').addClass('animate__animated animate__fadeIn animate__slower animate__delay-2s');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0.5)');
 }
 
-function animateAnnouncementsBox() {
+function animateAnnouncementsBox() { // basic animations
     $('#announcements-box').addClass('animate__animated animate__fadeIn animate__slower');
     $('#announcements-box').css('background-color', 'rgba(50,50,50,0.5)');
 }
 
-function push() {
+function push() { // returns the bet to the player's pot
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/push.png">');
     $('#deal-again').show();
@@ -721,7 +723,7 @@ function push() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
-function lose() {
+function lose() { // takes the bet away
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-lost.png">');
     currentBet = 0;
@@ -739,7 +741,7 @@ function lose() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
-function win() {
+function win() { // doubles the pot and gives to player
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/you-won.png">');
     $('#deal-again').show();
@@ -758,7 +760,7 @@ function win() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
-function partialWin() {
+function partialWin() { // BETA: SPLIT FUNCTIONALITY
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/partial-win">');
     $('#deal-again').show();
     $('#deal, #bet-down, #bet-up, #betting-time, #all-in, #clear-bet').prop('disabled', false);
@@ -773,7 +775,7 @@ function partialWin() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
-function partialLoss() {
+function partialLoss() { // BETA: SPLIT FUNCTIONALITY
     animateAnnouncementsBox();
     $('#announcements').html('<img class="animate__animated animate__fadeIn animate__slower animate__delay-1s" src="assets/partial-loss.png">');
     hidePlays()
@@ -785,7 +787,7 @@ function partialLoss() {
     setTimeout(()=>{$('#betting-space').html('')}, 2500)
 }
 
-function split() {
+function split() { // BETA: SPLIT FUNCTIONALITY
     s.wasInitialized = true;
     s.chips = s.chips + currentBet
     p.chips = p.chips - currentBet;
@@ -810,7 +812,7 @@ function split() {
                               </li>`);
 }
 
-function volume() {
+function volume() { // sets the volume, and unmutes if the user muted
     $('audio#bg-player').prop('volume', 0.08);
     $('audio#bg-player')[0].play()
     $('audio#flip-sound').prop('volume', 0.4);
@@ -822,14 +824,14 @@ function volume() {
     $('audio#easter-egg-sound').prop('volume', 0.2);
 }
 
-function clearAnnouncements() {
+function clearAnnouncements() { // basic animations
     $('#game-stats').html('');
     $('#game-stats').css('background-color', 'rgba(0,0,0,0)');
     $('#announcements-box').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-1s');
     $('#announcements').html('');
 }
 
-function resetCounters() {
+function resetCounters() { // sets all counters back to 0 for the next round.
     p.cardCounter = 0;
     d.cardCounter = 0;
     s.cardCounter = 1;
