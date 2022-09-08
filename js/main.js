@@ -172,6 +172,7 @@ $(function(){ // basic jQuery for click inputs here
     })
     $('#menu-bgm-pause').click(()=>{
         $('audio#bg-player')[0].pause()
+        $('audio#bg-player').prop('volume', 0);
         $('audio#flip-sound').prop('volume', 0);
         $('audio#bet-sound').prop('volume', 0);
         $('audio#shuffle-sound').prop('volume', 0);
