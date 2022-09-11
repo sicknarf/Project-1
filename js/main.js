@@ -66,6 +66,8 @@ let discardPile = [];
 let aceCheck = false;
 let currentBet = 0;
 let easterEgg = 0;
+let lastBet = 0;
+let betVisual = ``
 
 $(function(){ // basic jQuery for click inputs here
     $('#menu-bgm-play').click(volume);
@@ -83,9 +85,16 @@ $(function(){ // basic jQuery for click inputs here
     $('#deal, #deal-again').click(()=>{ // will not let you deal if you have 0 as your bet
         if(currentBet > 0){
             deal();
-        } else if(currentBet <= 0){
+        } else if(currentBet <= 0 && lastBet < p.chips){
+            p.chips = p.chips - lastBet;
+            $('#betting-space').append(betVisual);
+            betDisplay();
+            $('#bet-amount').html(lastBet)
+            currentBet = lastBet
+            deal();
+        } else if(currentBet <= 0 && lastBet > p.chips){
             $('#bet-notifications').css('background-color','pink');
-            $('#bet-notifications').html('you have to bet more than that');
+            $('#bet-notifications').html('you don\'t have enough souls. Adjust your bet.');
         }
     })
 
@@ -227,6 +236,8 @@ function deal () { // deal functionality that resets the board and hands.
     $('#game-stats').removeClass('animate__animated animate__fadeIn animate__slower animate__delay-3s animate__delay-2s');
     $('#bet-notifications').html('');
     $('#bet-notifications').css('background-color','rgba(0,0,0,0)');
+    lastBet = currentBet;
+    betVisual = $('#betting-space').html();
     if(p.chips >= currentBet){
         $('#double').prop('disabled', false);
     }
