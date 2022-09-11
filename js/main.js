@@ -85,7 +85,7 @@ $(function(){ // basic jQuery for click inputs here
     $('#deal, #deal-again').click(()=>{ // will not let you deal if you have 0 as your bet
         if(currentBet > 0){
             deal();
-        } else if(currentBet <= 0 && lastBet < p.chips){
+        } else if(currentBet <= 0 && lastBet <= p.chips){
             p.chips = p.chips - lastBet;
             $('#betting-space').append(betVisual);
             betDisplay();
