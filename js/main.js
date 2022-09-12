@@ -831,7 +831,7 @@ function volume() { // sets the volume, and unmutes if the user muted
     $('audio#bet-sound').prop('volume', 0.2);
     $('audio#shuffle-sound').prop('volume', 0.5);
     $('audio#all-in-sound').prop('volume', 0.3);
-    $('audio#announce-sound').prop('volume', 0.3);
+    $('audio#announce-sound').prop('volume', 0.22);
     $('audio#deal-sound').prop('volume', 0.3);
     $('audio#easter-egg-sound').prop('volume', 0.2);
 }
